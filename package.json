@@ -18,11 +18,12 @@
   },
   "homepage": "https://github.com/apium-graveolens/buynCel#readme",
   "dependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "webpack": "^4.23.0",
@@ -30,8 +31,9 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
+      "env",
+      "react",
+      "stage-2"
     ]
   }
 }
