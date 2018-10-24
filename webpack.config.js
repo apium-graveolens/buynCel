@@ -2,10 +2,10 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: ['babel-polyfill', './client'],
+  entry: ['@babel/polyfill', './client'],
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'public')
   },
   module: {
     rules: [
