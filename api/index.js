@@ -3,12 +3,12 @@ const router = express.Router()
 
 const db = require('../db')
 
-router.use(express.json())
+router.use(express.json()) //Note: we don't need line 6 because line 12 of server.js already doing the same thing
 
 //USER ROUTES
 
 //Get all users
-router.get('/users',  async (req, res, next) => {
+router.get('/users', async (req, res, next) => {
     try {
         let users = await db.User.findAll({})
         res.send(users)
@@ -18,7 +18,7 @@ router.get('/users',  async (req, res, next) => {
 })
 
 //Get user by Id
-router.get('/users/:id',  async (req, res, next) => {
+router.get('/users/:id', async (req, res, next) => {
     try {
         let user = await db.User.findById(req.params.id)
         res.send(user)
@@ -55,7 +55,7 @@ router.delete('/users/:id', async (req, res, next) => {
 router.put('/users/:id', async (req, res, next) => {
     try {
         let editedUser = await db.User.findById(req.params.id)
-        editedUser.update(req.body)
+        editedUser.update(req.body) //Note: line 58 is async and needs an await statement
         res.send(editedUser)
     } catch (ex) {
         next(ex)
@@ -101,7 +101,7 @@ router.get('/products/category/:category', async (req, res, next) => {
 
 //Create a Product
 router.post('/products', async (req, res, next) => {
-    try{
+    try {
         let newProduct = await db.Product.create(req.body)
         res.send(newProduct)
     } catch (ex) {
@@ -113,7 +113,7 @@ router.post('/products', async (req, res, next) => {
 router.put('/products/:id', async (req, res, next) => {
     try {
         let editedProduct = await db.Product.findById(req.params.id)
-        editedProduct.update(req.body)
+        editedProduct.update(req.body) //Note: line 116 is async and needs an await statement 
         res.send(editedProduct)
     } catch (ex) {
         next(ex)
@@ -184,7 +184,7 @@ router.post('/orders', async (req, res, next) => {
 router.put('/orders/:id', async (req, res, next) => {
     try {
         let editedOrder = await db.Order.findById(req.params.id)
-        editedOrder.update(req.body)
+        editedOrder.update(req.body) //Note: line 187 is async and needs an await statement
         res.send(editedOrder)
     } catch (ex) {
         next(ex)
@@ -221,7 +221,7 @@ router.delete('/lineitems/:id', async (req, res, next) => {
 router.put('/lineitems/:id', async (req, res, next) => {
     try {
         let editedLineItem = await db.LineItem.findById(req.params.id)
-        editedLineItem.update(req.body)
+        editedLineItem.update(req.body) //Note: line 224 is async and needs an await statement
         res.send(editedLineItem)
     } catch (ex) {
         next(ex)
