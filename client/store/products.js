@@ -48,7 +48,7 @@ export const _deleteProduct = id => dispatch => (
 )
 
 //reducer for the product slice of state
-export default reducer = (state = [], action) => {
+export default (state = [], action) => {
   switch (action.type) {
     case LOAD_PRODUCTS:
       return action.products;
