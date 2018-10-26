@@ -3,8 +3,6 @@ const router = express.Router()
 
 const db = require('../db')
 
-router.use(express.json()) //Note: we don't need line 6 because line 12 of server.js already doing the same thing
-
 //USER ROUTES
 
 //Get all users
@@ -55,7 +53,7 @@ router.delete('/users/:id', async (req, res, next) => {
 router.put('/users/:id', async (req, res, next) => {
     try {
         let editedUser = await db.User.findById(req.params.id)
-        editedUser.update(req.body) //Note: line 58 is async and needs an await statement
+        await editedUser.update(req.body) 
         res.send(editedUser)
     } catch (ex) {
         next(ex)
@@ -113,7 +111,7 @@ router.post('/products', async (req, res, next) => {
 router.put('/products/:id', async (req, res, next) => {
     try {
         let editedProduct = await db.Product.findById(req.params.id)
-        editedProduct.update(req.body) //Note: line 116 is async and needs an await statement 
+        await editedProduct.update(req.body)
         res.send(editedProduct)
     } catch (ex) {
         next(ex)
@@ -184,7 +182,7 @@ router.post('/orders', async (req, res, next) => {
 router.put('/orders/:id', async (req, res, next) => {
     try {
         let editedOrder = await db.Order.findById(req.params.id)
-        editedOrder.update(req.body) //Note: line 187 is async and needs an await statement
+        await editedOrder.update(req.body) 
         res.send(editedOrder)
     } catch (ex) {
         next(ex)
@@ -203,7 +201,7 @@ router.post('/lineitems', async (req, res, next) => {
     }
 })
 
-//Deleta a Line Item
+//Delete  a Line Item
 router.delete('/lineitems/:id', async (req, res, next) => {
     try {
         await db.LineItem.destroy({
@@ -221,7 +219,7 @@ router.delete('/lineitems/:id', async (req, res, next) => {
 router.put('/lineitems/:id', async (req, res, next) => {
     try {
         let editedLineItem = await db.LineItem.findById(req.params.id)
-        editedLineItem.update(req.body) //Note: line 224 is async and needs an await statement
+        await editedLineItem.update(req.body) 
         res.send(editedLineItem)
     } catch (ex) {
         next(ex)
