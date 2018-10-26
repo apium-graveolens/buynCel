@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nodemon node_modules/.bin/mocha --require babel-register",
     "webpack": "./node_modules/webpack/bin/webpack.js",
     "start:dev": "npm run webpack -- --watch --mode=development & DATABASE_URL=postgres://localhost/my_db nodemon server.js --ignore src/ --ignore dist"
   },
@@ -27,7 +27,9 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.2.0",
     "express": "^4.16.4",
+    "mocha": "^5.2.0",
     "pg": "^7.5.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
