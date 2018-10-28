@@ -1,3 +1,3 @@
-const Seq = require('sequeilze');
+const Seq = require('sequelize');
 const conn = require('../connection');
 

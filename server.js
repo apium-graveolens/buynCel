@@ -9,8 +9,6 @@ app.use(express.static(path.join(__dirname, '.', 'public')))
 
 app.use('/api', require('./api'))
 
-app.use(express.json())
-
 db.syncAndSeed()
 
 const PORT = process.env.PORT || 3000

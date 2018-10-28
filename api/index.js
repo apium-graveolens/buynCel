@@ -1,7 +1,30 @@
 const express = require('express')
 const router = express.Router()
 
-const db = require('../db')
+const jwt = require('jwt-simple')
+
+const {User} = require('../db')
+
+router.use(express.json())
+
+//AUTH MIDDLEWARE
+router.use( async (req, res, next) => {
+    const token = req.headers.authorization
+    if (!token){
+      return next()
+    }
+    try {
+      let decodedToken = jwt.decode(token, process.env.JWT_SECRET)
+      let id = decodedToken.id
+      req.user = await User.findById(id)
+      next()
+    } catch (ex){
+      next({status: 401})
+    }
+})
+
+//AUTH ROUTES
+router.use('/auth', require('./auth'))
 
 //USER ROUTES
 router.use('/users', require('./users'))
