@@ -6,15 +6,15 @@ const ADD_PROUDCT = 'ADD_PRODUCT';
 const DELETE_PRODUCT = 'DELETE_PRODUCT';
 
 //action creators
-const loadProducts = products => ({
+export const loadProducts = products => ({
   type: LOAD_PRODUCTS,
   products
 });
-const addProduct = product => ({
+export const addProduct = product => ({
   type: ADD_PROUDCT,
   product
 });
-const deleteProduct = id => ({
+export const deleteProduct = id => ({
   type: DELETE_PRODUCT,
   id
 })
@@ -48,12 +48,12 @@ export const _deleteProduct = id => dispatch => (
 )
 
 //reducer for the product slice of state
-export default reducer = (state = [], action) => {
+export default (state = [], action) => {
   switch (action.type) {
     case LOAD_PRODUCTS:
       return action.products;
     case ADD_PROUDCT:
-      return [...state, product];
+      return [...state, action.product];
     case DELETE_PRODUCT:
       return state.filter(product => product.id !== action.id);
     default:
