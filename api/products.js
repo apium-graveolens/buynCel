@@ -3,6 +3,10 @@ const router = express.Router()
 
 const db = require('../db')
 
+const checkAdmin = require('./checkAdmin')
+
+//UN-AUTH ROUTES
+
 //Get all products
 router.get('/', async (req, res, next) => {
     try {
@@ -37,9 +41,24 @@ router.get('/category/:category', async (req, res, next) => {
     }
 })
 
+//AUTH ROUTES
+
+//Auth Middleware
+router.use('/', async (req, res, next) => {
+    if (!req.user){
+        res.sendStatus(401)
+    } else {
+        next()
+    }
+})
+
 //Create a Product
 router.post('/', async (req, res, next) => {
     try {
+        let reqUser = req.user.dataValues.id
+        if (await checkAdmin(reqUser) === false){
+            return res.sendStatus(401)
+        }
         let newProduct = await db.Product.create(req.body)
         res.send(newProduct)
     } catch (ex) {
@@ -50,6 +69,10 @@ router.post('/', async (req, res, next) => {
 //Edit a Product
 router.put('/:id', async (req, res, next) => {
     try {
+        let reqUser = req.user.dataValues.id
+        if (await checkAdmin(reqUser) === false){
+            return res.sendStatus(401)
+        }
         let editedProduct = await db.Product.findById(req.params.id)
         await editedProduct.update(req.body)
         res.send(editedProduct)

@@ -16,7 +16,7 @@ router.use( async (req, res, next) => {
     try {
       let decodedToken = jwt.decode(token, process.env.JWT_SECRET)
       let id = decodedToken.id
-      req.user = await User.findById(id)
+      req.user = await User.findByPk(id)
       next()
     } catch (ex){
       next({status: 401})
