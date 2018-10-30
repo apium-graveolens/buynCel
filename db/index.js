@@ -8,7 +8,12 @@ const Order = require('./models/Order');
 
 //--- Define Relations ---
 
+
+//--- Helper functions ---
+const syncSeed = () => conn.sync({ force: true });
+
 module.exports = {
+    syncSeed,
     conn,
     models: {
         User,
