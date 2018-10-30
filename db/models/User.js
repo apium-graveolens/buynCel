@@ -15,6 +15,10 @@ const User = conn.define('user', {
     validate: {
       notEmpty: true
     }
+  },
+  isAdmin: {
+    type: Seq.BOOLEAN,
+    defaultValue: false
   }
 });
 
