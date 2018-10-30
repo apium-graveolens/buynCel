@@ -10,7 +10,8 @@ const checkAdmin = require('./checkAdmin')
 //Create a user
 router.post('/', async (req, res, next) => {
     try {
-        let newUser = await db.User.create(req.body)
+        let userToCreate = req.body
+        let newUser = await db.User.create({...userToCreate, isAdmin: false})
         res.send(newUser)
     } catch (ex) {
         next(ex)
@@ -51,6 +52,41 @@ router.get('/:id', async (req, res, next) => {
         }
         let user = await db.User.findById(req.params.id)
         res.send(user)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
+//Edit user
+router.put('/:id', async (req, res, next) => {
+    try {
+        let reqUser = req.user.dataValues.id
+        if ((reqUser.toString() !== req.params.id) && (!await checkAdmin(reqUser))) {
+            return res.sendStatus(401)
+        }
+        let newUserData = req.body
+        let editedUser = await db.User.findById(req.params.id)
+        await editedUser.update({...newUserData, isAdmin: false})
+        res.send(editedUser)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
+//Toggle user Admin Status
+router.get('/:id/toggleadmin', async (req, res, next) => {
+    try {
+        let reqUser = req.user.dataValues.id
+        if (await checkAdmin(reqUser) === false){
+            return res.sendStatus(401)
+        }
+        let editedUser = await db.User.findById(req.params.id)
+        if (editedUser.isAdmin === false){
+            await editedUser.update({isAdmin: true})
+        } else {
+            await editedUser.update({isAdmin: false})
+        }
+        res.send(editedUser)
     } catch (ex) {
         next(ex)
     }
