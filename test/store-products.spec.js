@@ -13,8 +13,6 @@ import reducer, {
   deleteProduct
 } from '../client/store/products';
 
-const mock = new MockAdapter(axios);
-
 const products = [
   { id: 1, title: 'Sandals', description: 'Casual, beach foot-wear', price: '19.99' },
   { id: 2, title: 'Soccer Ball', description: 'Size 5 FIFA standard', price: '24.99' },
@@ -79,7 +77,11 @@ describe('Product slice', () => {
   describe('async thunks', () => {
     const middlewares = [thunk];
     const mockStore = configureMockStore(middlewares);
+    let mock;
 
+    beforeEach(() => {
+      mock = new MockAdapter(axios);
+    })
     afterEach(() => {
       mock.reset();
     });
