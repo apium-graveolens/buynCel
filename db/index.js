@@ -7,7 +7,8 @@ const Review = require('./models/Review');
 const Order = require('./models/Order');
 
 //--- Define Relations ---
-
+Review.belongsTo(Product);
+Review.belongsTo(User);
 
 //--- Helper functions ---
 const syncSeed = () => conn.sync({ force: true });
