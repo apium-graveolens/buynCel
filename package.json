@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nodemon node_modules/.bin/mocha --require babel-register --require mock-local-storage",
     "webpack": "./node_modules/webpack/bin/webpack.js",
-    "start:dev": "npm run webpack -- --watch --mode=development & DATABASE_URL=postgres://localhost/my_db JWT_SECRET='testKey' nodemon server.js --ignore src/ --ignore dist"
+    "start:dev": "npm run webpack -- --watch --ignore--mode=development & DATABASE_URL=postgres://localhost/my_db JWT_SECRET='testKey' nodemon server.js --ignore client/ --ignore public"
   },
   "repository": {
     "type": "git",
