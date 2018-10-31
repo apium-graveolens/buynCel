@@ -16,6 +16,7 @@ Order.belongsTo(User)
 Order.hasMany(LineItem)
 
 LineItem.belongsTo(Order)
+LineItem.belongsTo(User)
 LineItem.belongsTo(Product)
 
 Category.hasMany(Product)

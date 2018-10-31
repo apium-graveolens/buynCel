@@ -44,11 +44,26 @@ router.post('/', async (req, res, next) => {
     }
 })
 
+//Get a Line Item
+router.get('/:id', async (req, res, next) => {
+    try {
+        let reqUser = req.user.dataValues.id
+        let lineItem = await db.LineItem.findById(req.params.id)
+        if ((reqUser !== lineItem.dataValues.userId) && (!await checkAdmin(reqUser))) {
+            return res.sendStatus(401)
+        }
+        res.send(lineItem)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 //Delete a Line Item
 router.delete('/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if ((reqUser.toString() !== req.params.id) && (!await checkAdmin(reqUser))) {
+        let lineItem = await db.LineItem.findById(req.params.id)
+        if ((reqUser !== lineItem.dataValues.userId) && (!await checkAdmin(reqUser))) {
             return res.sendStatus(401)
         }
         await db.LineItem.destroy({
@@ -66,7 +81,8 @@ router.delete('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if ((reqUser.toString() !== req.params.id) && (!await checkAdmin(reqUser))) {
+        let lineItem = await db.LineItem.findById(req.params.id)
+        if ((reqUser !== lineItem.dataValues.userId) && (!await checkAdmin(reqUser))) {
             return res.sendStatus(401)
         }
         let editedLineItem = await db.LineItem.findById(req.params.id)
