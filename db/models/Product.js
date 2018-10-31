@@ -11,7 +11,7 @@ const Product = conn.define('product', {
         allowNull: false
     },
     price: {
-        type: Seq.INTEGER,
+        type: Seq.FLOAT,
         allowNull: false
     },
     photo: {

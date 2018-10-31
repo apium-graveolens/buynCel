@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { _loadProducts } from '../store/products';
 
 class ProductList extends Component {
-  componentDidMount() {
-    this.props.init();
-  }
   render() {
     return (
       <div>
@@ -20,9 +16,8 @@ class ProductList extends Component {
   }
 }
 
-const mapStateToProps = ({ products }) => ({ products })
-const mapDispatchToProps = dispatch => ({
-  init: () => dispatch(_loadProducts())
-})
+const mapStateToProps = ({ products }) => {
+  return { products }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
+export default connect(mapStateToProps)(ProductList);
