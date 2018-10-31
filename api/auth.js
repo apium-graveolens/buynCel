@@ -9,7 +9,7 @@ router.post('/', async (req, res, next) => {
     try {
         let authUser = await User.findOne({
         where: {
-          name: req.body.name,
+          email: req.body.email,
           password: req.body.password
         }
       })
