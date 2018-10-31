@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-//Edit a Product
+//Edit a Category
 router.put('/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
