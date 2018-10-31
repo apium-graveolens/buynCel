@@ -32,6 +32,9 @@ router.use('/users', require('./users'))
 //PRODUCT ROUTES
 router.use('/products', require('./products'))
 
+//CATEGORY ROUTES
+router.use('/categories', require('./categories'))
+
 //ORDER ROUTES
 router.use('/orders', require('./orders'))
 
