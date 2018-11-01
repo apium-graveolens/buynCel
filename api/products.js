@@ -10,7 +10,9 @@ const checkAdmin = require('./checkAdmin')
 //Get all products
 router.get('/', async (req, res, next) => {
     try {
-        let products = await db.Product.findAll({})
+        let products = await db.Product.findAll({
+            include: [db.Category]
+        })
         res.send(products)
     } catch (ex) {
         next(ex)
@@ -45,7 +47,7 @@ router.get('/category/:category', async (req, res, next) => {
 
 //Auth Middleware
 router.use('/', async (req, res, next) => {
-    if (!req.user){
+    if (!req.user) {
         res.sendStatus(401)
     } else {
         next()
@@ -56,7 +58,7 @@ router.use('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let newProduct = await db.Product.create(req.body)
@@ -70,7 +72,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let editedProduct = await db.Product.findById(req.params.id)
