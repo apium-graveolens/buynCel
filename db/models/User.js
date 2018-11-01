@@ -19,6 +19,13 @@ const User = conn.define('user', {
   isAdmin: {
     type: Seq.BOOLEAN,
     defaultValue: false
+  },
+  facebookEmail: {
+    type: Seq.STRING,
+    unique: true,
+    validate: {
+      isEmail: true,
+    }
   }
 });
 
