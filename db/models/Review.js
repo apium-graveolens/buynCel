@@ -11,6 +11,13 @@ const Review = conn.define('review', {
       }
     },
   },
+  rating: {
+    type: Seq.INTEGER,
+    validate: {
+      min: 1,
+      max: 5
+    }
+  }
 });
 
 module.exports = Review;
