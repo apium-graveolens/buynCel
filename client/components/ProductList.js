@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ProductSingle from './ProductSingle';
+import { Grid } from '@material-ui/core';
 
 class ProductList extends Component {
   render() {
     return (
-      <div>
-        <h1>Product List</h1>
-        <ul>
-          {this.props.products.map(product => (
-            <li key={product.id}>{product.title}</li>
-          ))}
-        </ul>
-      </div>
+      <Grid container justify="center">
+        {this.props.products.map(product => (
+          <ProductSingle key={product.id} product={product} />
+        ))}
+      </Grid>
     )
   }
 }
