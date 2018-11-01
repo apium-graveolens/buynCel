@@ -53,7 +53,8 @@ const syncSeed = async () => {
             const lex = await User.create({
                 email: 'lex@email.com',
                 password: '123',
-                isAdmin: true
+                isAdmin: true,
+                facebookEmail: 'lexbedwell@gmail.com'
             })
             const sam = await User.create({
                 email: 'sam@email.com',
