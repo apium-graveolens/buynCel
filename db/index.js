@@ -10,7 +10,9 @@ const LineItem = require('./models/LineItem')
 
 //--- Define Relations ---
 Review.belongsTo(Product);
+Product.hasMany(Review);
 Review.belongsTo(User);
+User.hasMany(Review);
 
 Order.belongsTo(User)
 Order.hasMany(LineItem)
@@ -19,13 +21,31 @@ LineItem.belongsTo(Order)
 LineItem.belongsTo(User)
 LineItem.belongsTo(Product)
 
-Category.hasMany(Product)
+Category.belongsToMany(Product, { through: 'description' })
+Product.belongsToMany(Category, { through: 'description' })
 
 //--- Test seed data ---
 
 const syncSeed = async () => {
-    conn.sync({force: true})
-        .then (async () => {
+    conn.sync({ force: true })
+        .then(async () => {
+            const rawRev = await Review.create({
+                content: 'Lorem ipsum dolor amet adaptogen brunch flexitarian pug truffaut, street art kinfolk. Williamsburg street art pickled, chicharrones disrupt locavore shabby chic beard. Food truck brooklyn +1, celiac post-ironic organic listicle. Cred deep v squid, paleo bitters tumeric small batch.',
+                rating: 4,
+            })
+            const rawRev2 = await Review.create({
+                content: 'DIY stumptown pitchfork 8-bit af iPhone flannel ugh glossier bicycle rights squid. Adaptogen fanny pack church-key crucifix ennui poutine kogi wayfarers flexitarian wolf actually quinoa pour-over tumeric. Food truck hella pickled cray enamel pin.',
+                rating: 3,
+            })
+            const chopRev = await Review.create({
+                content: 'DIY stumptown pitchfork 8-bit af iPhone flannel ugh glossier bicycle rights squid. Adaptogen fanny pack church-key crucifix ennui poutine kogi wayfarers flexitarian wolf actually quinoa pour-over tumeric. Food truck hella pickled cray enamel pin.',
+                rating: 5,
+            })
+            const chopRev2 = await Review.create({
+                content: 'So Baaaaaaad! DIY stumptown pitchfork 8-bit af iPhone flannel ugh glossier bicycle rights squid. Adaptogen fanny pack church-key crucifix ennui poutine kogi wayfarers flexitarian wolf actually quinoa pour-over tumeric. Food truck hella pickled cray enamel pin.',
+                rating: 2,
+            })
+
             const rawCat = await Category.create({
                 name: 'raw'
             })
@@ -36,19 +56,16 @@ const syncSeed = async () => {
                 title: 'Raw Celery',
                 description: 'It is raw celery',
                 price: 100,
-                categoryId: rawCat.id
             })
             const choppedCelery = await Product.create({
                 title: 'Chopped Celery',
                 description: 'It is chopped celery',
                 price: 200,
-                categoryId: choppedCat.id
             })
             const superChoppedCelery = await Product.create({
                 title: 'Super Chopped Celery',
                 description: 'It is super chopped celery',
                 price: 300,
-                categoryId: choppedCat.id
             })
             const lex = await User.create({
                 email: 'lex@email.com',
@@ -78,6 +95,15 @@ const syncSeed = async () => {
                 orderId: order2.id,
                 productId: choppedCelery.id
             })
+
+            await rawCelery.addCategory(rawCat)
+            await choppedCelery.addCategory(choppedCat)
+            await superChoppedCelery.addCategory(rawCat)
+            await superChoppedCelery.addCategory(choppedCat)
+            await rawCelery.addReview(rawRev)
+            await rawCelery.addReview(rawRev2);
+            await choppedCelery.addReview(chopRev);
+            await choppedCelery.addReview(chopRev2);
         })
 }
 
