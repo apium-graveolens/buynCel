@@ -1,0 +1,11 @@
+html {
+  height: 100vh;
+}
+body {
+  margin: 0;
+  background-color: rgb(245,248,247);
+}
+a {
+  text-decoration: none;
+}
+
