@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 const ProductDetail = ({ product }) => {
+
   const { title, description, price, photo } = product;
   return (
     <Grid container justify="center">
@@ -23,7 +24,7 @@ const mapStateToProps = ({ products }, { match }) => {
   console.log('mapping in detail')
   const id = match.params.id * 1;
   return {
-    product: products.find(product => product.id == id)
+    product: products[0] ? products.find(product => product.id == id) : {}
   }
 }
 
