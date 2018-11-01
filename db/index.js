@@ -64,7 +64,8 @@ const syncSeed = async () => {
             })
             const superChoppedCelery = await Product.create({
                 title: 'Super Chopped Celery',
-                description: 'It is super chopped celery', price: 300,
+                description: 'It is super chopped celery',
+                price: 300,
             })
             const lex = await User.create({
                 email: 'lex@email.com',
