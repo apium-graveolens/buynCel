@@ -27,12 +27,12 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-//Get product by Catagory
-router.get('/category/:category', async (req, res, next) => {
+//Get products by Category
+router.get('/category/:id', async (req, res, next) => {
     try {
         let productsByCategory = await db.Product.findAll({
             where: {
-                category: req.params.category
+                categoryId: req.params.id
             }
         })
         res.send(productsByCategory)
