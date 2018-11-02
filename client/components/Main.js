@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Link, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { _loadProducts } from '../store/products';
-import { Grid } from '@material-ui/core';
 import NavBar from './NavBar';
 import Home from './Home';
 import ProductList from './ProductList';
 import SignUp from './SignUp';
 import ProductDetail from './ProductDetail';
+import Login from './Login';
+import { _exchangeTokenForAuth } from '../store/auth';
 
 class Main extends Component {
   componentDidMount() {
@@ -25,6 +26,7 @@ class Main extends Component {
           <Route exact path='/products' component={ProductList} />
           <Route exact path='/products/:id' component={ProductDetail} />
           <Route exact path='/sign-up' component={SignUp} />
+          <Route exact path='/login' component={Login} />
         </div>
       </div>
     )
@@ -32,7 +34,10 @@ class Main extends Component {
 };
 
 const mapDispatchToProps = dispatch => ({
-  init: () => dispatch(_loadProducts())
+  init: () => {
+    dispatch(_loadProducts())
+    dispatch(_exchangeTokenForAuth())
+  }
 });
 
 export default withRouter(connect(null, mapDispatchToProps)(Main));

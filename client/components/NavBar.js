@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Menu, MenuItem, Button, withStyles, IconButton, Typography, AppBar, Toolbar } from '@material-ui/core';
+import { Menu, MenuItem, Button, Grid, withStyles, IconButton, Typography, AppBar, Toolbar } from '@material-ui/core';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
+import { connect } from 'react-redux';
+import { logout } from '../store/auth';
 
 const styles = {
   root: {
@@ -14,59 +17,108 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-  right: {
-    float: 'right'
+  left: {
+    display: 'flex',
   },
   appBar: {
     position: 'absolute',
     top: 0,
     background: 'transparent',
     boxShadow: 'none'
-  }
+  },
+  title: {
+    marginTop: '18px',
+  },
+  account: {
+    marginTop: '13px',
+  },
 };
 
 class NavBar extends Component {
   state = {
     anchorEl: null,
+    anchorAccount: null,
   }
   handleClick = e => {
     this.setState({ anchorEl: e.currentTarget })
+  };
+  handleAccountMenu = e => {
+    this.setState({ anchorAccount: e.currentTarget })
   }
+  handleAccountClose = () => {
+    this.setState({ anchorAccount: null });
+  };
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
   render() {
-    const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { classes, auth } = this.props;
+    const { anchorEl, anchorAccount } = this.state;
     const open = Boolean(anchorEl);
+    const accountOpen = Boolean(anchorAccount);
     const isHome = this.props.location.pathname == '/';
     return (
       <div className={classes.root}>
         <AppBar className={classes.appBar} position="static" color="default">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon
-                fontSize="large"
-                onClick={this.handleClick}
-              />
-            </IconButton>
-            <Menu
-              id="fade-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={this.handleClose}
+            <Grid
+              justify="space-between"
+              container
+              spacing={24}
             >
-              <MenuItem component={Link} to="/products" onClick={this.handleClose}>Products</MenuItem>
-              <MenuItem component={Link} to="/sign-up" onClick={this.handleClose}>Sign Up</MenuItem>
-              <MenuItem component={Link} to="/login" onClick={this.handleClose}>Login</MenuItem>
-            </Menu>
-            {!isHome && (
-              <div className={classes.grow}>
-                <Typography variant="h6" color="inherit" to='/' component={Link}>
-                  Celery
-                </Typography>
-              </div>
-            )}
+              <Grid item className={classes.left}>
+                <IconButton
+                  className={classes.menuButton}
+                  color="inherit" aria-label="Menu"
+                  onClick={this.handleClick}
+                >
+                  <MenuIcon
+                    fontSize="large"
+                  />
+                </IconButton>
+                <Menu
+                  id="fade-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={this.handleClose}
+                >
+                  <MenuItem component={Link} to="/products" onClick={this.handleClose}>Products</MenuItem>
+                  <MenuItem component={Link} to="/sign-up" onClick={this.handleClose}>Sign Up</MenuItem>
+                </Menu>
+                {!isHome && (
+                  <Typography className={classes.title} variant="h6" color="inherit" to='/' component={Link}>
+                    Celery
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item className={classes.account}>
+                {auth.id ? (
+                  <IconButton onClick={this.handleAccountMenu} >
+                    <AccountCircle fontSize="large" />
+                  </IconButton>
+                ) : (
+                    <Button
+                      component={Link}
+                      to="/login"
+                    >
+                      Login
+                  </Button>
+                  )}
+                <Menu
+                  id="account-menu"
+                  anchorEl={anchorAccount}
+                  open={accountOpen}
+                  onClose={this.handleAccountClose}
+                >
+                  <MenuItem
+                  >
+                    Account
+                  </MenuItem>
+
+                  <MenuItem onClick={this.props.logout}>Logout</MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </div>
@@ -74,4 +126,18 @@ class NavBar extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(NavBar));
+const mapStateToProps = ({ auth }) => {
+  return {
+    auth
+  }
+};
+const mapDispatchToProps = (dispatch, { history }) => {
+  return {
+    logout: () => {
+      dispatch(logout());
+      history.push('/');
+    }
+  }
+}
+
+export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar)));
