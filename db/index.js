@@ -56,16 +56,19 @@ const syncSeed = async () => {
                 title: 'Raw Celery',
                 description: 'It is raw celery',
                 price: 100,
+                quantity: 11
             })
             const choppedCelery = await Product.create({
                 title: 'Chopped Celery',
                 description: 'It is chopped celery',
                 price: 200,
+                quantity: 22
             })
             const superChoppedCelery = await Product.create({
                 title: 'Super Chopped Celery',
                 description: 'It is super chopped celery',
                 price: 300,
+                quantity: 33
             })
             const lex = await User.create({
                 email: 'lex@email.com',
@@ -83,7 +86,7 @@ const syncSeed = async () => {
                 userId: sam.id
             })
             const order2 = await Order.create({
-                status: 'order'
+                status: 'processing'
             })
             const lineItem1 = await LineItem.create({
                 quantity: 1,
