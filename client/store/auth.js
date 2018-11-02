@@ -50,9 +50,9 @@ export const _login = (credentials, history) => dispatch => (
     .catch(err => { throw err })
 );
 
-export const logout = () => {
+export const logout = () => dispatch => {
   window.localStorage.clear();
-  setUser({});
+  dispatch(setUser({}));
 }
 
 export default (state = {}, action) => {
