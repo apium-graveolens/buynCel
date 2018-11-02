@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { _loadOrders } from './orders';
 
 //action constants
 const SET_USER = 'SET_USER';
@@ -18,6 +19,7 @@ export const _exchangeTokenForAuth = () => dispatch => {
   }
 
   // else, send token to server to get back corresponding user
+  console.log()
   return axios.get('/api/auth', {
     headers: {
       authorization: token
@@ -28,10 +30,13 @@ export const _exchangeTokenForAuth = () => dispatch => {
     .then(response => {
       return response;
     })
-    .then(user => dispatch(setUser(user)))
+    .then(user => {
+      dispatch(setUser(user))
+      dispatch(_loadOrders(user.id))
+    })
     .catch(err => { throw err });
 };
-export const _login = credentials => dispatch => (
+export const _login = (credentials, history) => dispatch => (
   //send login credentials to server
   axios.post('/api/auth', credentials)
     .then(response => response.data.token)
@@ -39,7 +44,8 @@ export const _login = credentials => dispatch => (
       //if proper credentials, make another call to trade the token for the corresponding user
       if (token) window.localStorage.setItem('token', token);
       //QUESTION: Why do I have to return dispatch for tests to pass?
-      return dispatch(_exchangeTokenForAuth());
+      dispatch(_exchangeTokenForAuth());
+      history.push('/products')
     })
     .catch(err => { throw err })
 );
