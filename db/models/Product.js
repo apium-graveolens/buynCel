@@ -14,6 +14,10 @@ const Product = conn.define('product', {
         type: Seq.FLOAT,
         allowNull: false
     },
+    quantity: {
+        type: Seq.INTEGER,
+        allowNull: false
+    },
     photo: {
         type: Seq.STRING,
         allowNull: false,

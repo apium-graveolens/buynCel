@@ -73,6 +73,24 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
+//Delete a User
+router.delete('/:id', async (req, res, next) => {
+    try {
+        let reqUser = req.user.dataValues.id
+        if (await checkAdmin(reqUser) === false) {
+            return res.sendStatus(401)
+        }
+        await db.User.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        res.sendStatus(204)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 //Toggle user Admin Status
 router.get('/:id/toggleadmin', async (req, res, next) => {
     try {
