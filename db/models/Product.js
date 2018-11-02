@@ -1,6 +1,8 @@
 const Seq = require('sequelize');
 const conn = require('../connection');
 
+const Category = require('./Category')
+
 const Product = conn.define('product', {
     title: {
         type: Seq.STRING,
@@ -24,5 +26,34 @@ const Product = conn.define('product', {
         defaultValue: '/default.png'
     }
 })
+
+Product.searchTitle = async function(searchTerm){
+    searchTerm = searchTerm.toLowerCase()
+    let totalArr = await Product.findAll({
+        include: [Category]
+    })
+    let searchArr = []
+
+    totalArr.forEach( elem => {
+        if (elem.title.toLowerCase().indexOf(searchTerm) !== -1 && elem.quantity > 0){
+            searchArr.push(elem)
+        }
+    })
+    return searchArr
+}
+
+Product.getActiveProducts = async function(){
+    let totalArr = await Product.findAll({
+        include: [Category]
+    })
+    let activeArr = []
+
+    totalArr.forEach( elem => {
+        if (elem.quantity > 0){
+            activeArr.push(elem)
+        }
+    })
+    return activeArr
+}
 
 module.exports = Product
