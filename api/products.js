@@ -41,6 +41,7 @@ router.get('/category/:id', async (req, res, next) => {
     }
 })
 
+//Search products by Title
 router.get('/search/:search', async (req, res, next) => {
     try {
         let searchArr = await db.Product.searchTitle(req.params.search)

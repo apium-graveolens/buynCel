@@ -17,3 +17,7 @@ app.listen(PORT, () => {
     console.log(`Now listening in on port ${PORT}`)
 })
 
+app.use( (err, req, res, next) => {
+    console.log("Express is handling error: ", err)
+    res.status(err.status || 500).send({ error: err.message })
+})

@@ -58,7 +58,7 @@ router.get('/facebook/callback', async (req, res, next) => {
 
     response = await axios.get(`https://graph.facebook.com/me?fields=email&access_token=${access_token}`)
     let facebookData = response.data
-    console.log(facebookData)
+    //console.log(facebookData)
 
     let user = await User.findOne({
       where: {
@@ -66,7 +66,7 @@ router.get('/facebook/callback', async (req, res, next) => {
       }
     })
     if (!user){
-      res.redirect('/sign-up')
+      return next(new Error('User account not found'))
     }
     const token = jwt.encode({id: user.id}, process.env.JWT_SECRET)
     res.send({token})
