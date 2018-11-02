@@ -70,6 +70,12 @@ const syncSeed = async () => {
                 price: 300,
                 quantity: 33
             })
+            const discontinuedCelery = await Product.create({
+                title: 'Discontinued Celery',
+                description: 'Users should not see this while browsing or searching',
+                price: 400,
+                quantity: 0
+            })
             const lex = await User.create({
                 email: 'lex@email.com',
                 password: '123',

@@ -10,9 +10,7 @@ const checkAdmin = require('./checkAdmin')
 //Get all products
 router.get('/', async (req, res, next) => {
     try {
-        let products = await db.Product.findAll({
-            include: [db.Category]
-        })
+        let products = await db.Product.getActiveProducts()
         res.send(products)
     } catch (ex) {
         next(ex)
@@ -43,6 +41,15 @@ router.get('/category/:id', async (req, res, next) => {
     }
 })
 
+router.get('/search/:search', async (req, res, next) => {
+    try {
+        let searchArr = await db.Product.searchTitle(req.params.search)
+        res.send(searchArr)
+    } catch (ex) {
+        next(ex)
+    }
+
+})
 //AUTH ROUTES
 
 //Auth Middleware
