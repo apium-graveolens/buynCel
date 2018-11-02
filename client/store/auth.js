@@ -19,7 +19,6 @@ export const _exchangeTokenForAuth = () => dispatch => {
   }
 
   // else, send token to server to get back corresponding user
-  console.log()
   return axios.get('/api/auth', {
     headers: {
       authorization: token
