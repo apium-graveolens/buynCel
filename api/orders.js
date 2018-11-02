@@ -9,7 +9,7 @@ const checkAdmin = require('./checkAdmin')
 
 //Auth Middleware
 router.use('/', async (req, res, next) => {
-    if (!req.user){
+    if (!req.user) {
         res.sendStatus(401)
     } else {
         next()
@@ -20,7 +20,7 @@ router.use('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let orders = await db.Order.findAll({})
@@ -48,7 +48,7 @@ router.get('/:id', async (req, res, next) => {
 router.get('/status/:status', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let ordersByStatus = await db.Order.findAll({
@@ -70,10 +70,18 @@ router.get('/user/:id', async (req, res, next) => {
             return res.sendStatus(401)
         }
         let ordersByUser = await db.Order.findAll({
+            include: [db.LineItem],
             where: {
                 userId: req.params.id
             }
         })
+        if (ordersByUser.length == 0) {
+            const firstOrder = await db.Order.create({
+                status: 'cart',
+                userId: req.params.id
+            });
+            ordersByUser = [firstOrder]
+        }
         res.send(ordersByUser)
     } catch (ex) {
         next(ex)
@@ -103,7 +111,7 @@ router.put('/:id', async (req, res, next) => {
             return res.sendStatus(401)
         }
         let editedOrder = await db.Order.findById(req.params.id)
-        await editedOrder.update(req.body) 
+        await editedOrder.update(req.body)
         res.send(editedOrder)
     } catch (ex) {
         next(ex)
