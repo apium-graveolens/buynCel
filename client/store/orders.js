@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+const tokenHeader = {
+  headers: {
+    authorization: window.localStorage.getItem('token')
+  }
+};
+
 //action constants
 const LOAD_ORDERS = 'LOAD_ORDERS';
 const ADD_ORDER = 'ADD_ORDER';
@@ -20,11 +26,50 @@ export const deleteOrder = id => ({
 })
 
 //thunk creators | underscore(_) denotes a thunk
-export const _loadOrders = () => dispatch => (
-  axios.get('/api/orders')
+export const _createLineItem = (orderId, productId, userId) => dispatch => (
+  axios.post(`/api/lineItems`, {
+    productId,
+    orderId,
+  }, tokenHeader)
+    .then(() => dispatch(_loadOrders(userId)))
+    .catch(err => {
+      throw err;
+    })
+);
+export const _removeLineItem = (lineItem, userId) => dispatch => (
+  axios.delete(`/api/lineItems/${lineItem.id}`, tokenHeader)
+    .then(() => {
+      dispatch(_loadOrders(userId))
+    })
+    .catch(err => {
+      throw err;
+    })
+)
+export const _updateLineItem = (lineItem, direction, userId) => dispatch => {
+  const update = { quantity: lineItem.quantity };
+  console.log(update)
+  if (direction == '+') update.quantity++;
+  else update.quantity--;
+
+  axios.put(`api/lineItems/${lineItem.id}`, update, tokenHeader)
+    .then(() => {
+      dispatch(_loadOrders(userId))
+    })
+    .catch(err => {
+      throw err;
+    })
+}
+export const _placeOrder = id => dispatch => (
+  axios.put(`/api/orders/${id}`, { status: 'ORDER' })
+    .then(() => {
+      dispatch(_loadOrders())
+    })
+);
+export const _loadOrders = id => dispatch => (
+  axios.get(`/api/orders/user/${id}`, tokenHeader)
     .then(response => response.data)
     .then(orders => dispatch(loadOrders(orders)))
-    .catch(err => { throw err })
+    .catch(err => { console.log('here'); })
 );
 export const _addOrder = order => dispatch => (
   axios.post('/api/orders', order)
