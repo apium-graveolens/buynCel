@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ProductSingle from './ProductSingle';
 import { Grid } from '@material-ui/core';
-import { _loadOrders } from '../store/orders';
 
 class ProductList extends Component {
   render() {
