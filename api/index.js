@@ -44,7 +44,4 @@ router.use('/orders', require('./orders'))
 //LINE ITEM ROUTES
 router.use('/lineitems', require('./lineitems'))
 
-//EMAIL ROUTES
-router.use('/mail', require('./mail'))
-
 module.exports = router

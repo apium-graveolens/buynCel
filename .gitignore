@@ -3,3 +3,4 @@ package-lock.json
 public/bundle.js
 .DS_Store
 /api/.env.js
+.env.js
