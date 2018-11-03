@@ -96,6 +96,7 @@ router.post('/', async (req, res, next) => {
             return res.sendStatus(401)
         }
         let newOrder = await db.Order.create(req.body)
+        await newOrder.sendReceivedEmail()
         res.send(newOrder)
     } catch (ex) {
         next(ex)
