@@ -18,9 +18,12 @@ class ProductSingle extends Component {
   handleClick = e => {
     const direction = e.target.innerHTML;
     const { lineItem, create, update, remove } = this.props;
-    if (!lineItem) create();
+    if (!lineItem) {
+      console.log("CREATING")
+      create();
+    }
     else if (lineItem.quantity == 1 && direction == '-') remove();
-    else update(direction);
+    else update(lineItem, direction);
   }
   render() {
     const { lineItem, classes, product } = this.props;
@@ -73,7 +76,7 @@ const mapDispatchToProps = (dispatch, { order, product, user }) => {
   return {
     lineItem,
     create: () => dispatch(_createLineItem(order.id, product.id, user.id)),
-    update: direction => dispatch(_updateLineItem(lineItem, direction, user.id)),
+    update: (lineItem, direction) => dispatch(_updateLineItem(lineItem, direction, user.id, order.id)),
     remove: () => dispatch(_removeLineItem(lineItem, user.id))
   }
 }

@@ -38,10 +38,13 @@ export const _createLineItem = (orderId, productId, userId) => dispatch => (
       throw err;
     })
 );
-export const _removeLineItem = (lineItem, userId) => dispatch => (
+export const _removeLineItem = (lineItem, userId, orderId) => dispatch => (
   axios.delete(`/api/lineItems/${lineItem.id}`, tokenHeader)
     .then(() => {
       dispatch(_loadOrders(userId))
+
+      //TODO: This is hacky and needs a cleaning
+      dispatch(_loadLineItems(userId, orderId));
     })
     .catch(err => {
       throw err;
@@ -51,7 +54,6 @@ export const _updateLineItem = (lineItem, direction, userId, orderId) => dispatc
   const update = { quantity: lineItem.quantity };
   if (direction == '+') update.quantity++;
   else update.quantity--;
-  console.log(lineItem.id)
   axios.put(`api/lineItems/${lineItem.id}`, update, tokenHeader)
     .then(() => {
       dispatch(_loadOrders(userId));
