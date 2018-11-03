@@ -91,8 +91,8 @@ router.put('/:id', async (req, res, next) => {
         if ((reqUser !== lineItem.dataValues.userId) && (!await checkAdmin(reqUser))) {
             return res.sendStatus(401)
         }
-        let editedLineItem = await db.LineItem.findById(req.params.id)
-        await editedLineItem.update(req.body)
+        // let editedLineItem = await db.LineItem.findById(req.params.id)
+        await lineItem.update(req.body)
         res.send(lineItem)
     } catch (ex) {
         next(ex)
