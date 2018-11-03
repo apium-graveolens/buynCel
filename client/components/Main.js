@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { _loadProducts } from '../store/products';
+import { _loadCategories } from '../store/categories'
 import NavBar from './NavBar';
 import Home from './Home';
 import ProductList from './ProductList';
@@ -38,6 +39,7 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => ({
   init: () => {
     dispatch(_loadProducts())
+    dispatch(_loadCategories())
     dispatch(_exchangeTokenForAuth())
   }
 });
