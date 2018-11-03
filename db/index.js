@@ -18,7 +18,7 @@ Order.belongsTo(User)
 Order.hasMany(LineItem)
 
 LineItem.belongsTo(Order)
-LineItem.belongsTo(User)
+LineItem.belongsTo(User) //TODO: why do lineItems belong to users? they are al
 LineItem.belongsTo(Product)
 
 Category.belongsToMany(Product, { through: 'description' })
@@ -89,7 +89,7 @@ const syncSeed = async () => {
             })
             const order1 = await Order.create({
                 status: 'cart',
-                userId: sam.id
+                userId: lex.id
             })
             const order2 = await Order.create({
                 status: 'processing'
@@ -97,12 +97,14 @@ const syncSeed = async () => {
             const lineItem1 = await LineItem.create({
                 quantity: 1,
                 orderId: order1.id,
-                productId: rawCelery.id
+                productId: rawCelery.id,
+                userId: lex.id,
             })
             const lineItem2 = await LineItem.create({
                 quantity: 2,
                 orderId: order2.id,
-                productId: choppedCelery.id
+                productId: choppedCelery.id,
+                userId: lex.id,
             })
 
             await rawCelery.addCategory(rawCat)
