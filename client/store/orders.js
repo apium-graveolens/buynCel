@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { _loadLineItems } from './lineItems';
 
 const tokenHeader = {
   headers: {
@@ -30,6 +31,7 @@ export const _createLineItem = (orderId, productId, userId) => dispatch => (
   axios.post(`/api/lineItems`, {
     productId,
     orderId,
+    userId
   }, tokenHeader)
     .then(() => dispatch(_loadOrders(userId)))
     .catch(err => {
@@ -45,15 +47,17 @@ export const _removeLineItem = (lineItem, userId) => dispatch => (
       throw err;
     })
 )
-export const _updateLineItem = (lineItem, direction, userId) => dispatch => {
+export const _updateLineItem = (lineItem, direction, userId, orderId) => dispatch => {
   const update = { quantity: lineItem.quantity };
-  console.log(update)
   if (direction == '+') update.quantity++;
   else update.quantity--;
-
+  console.log(lineItem.id)
   axios.put(`api/lineItems/${lineItem.id}`, update, tokenHeader)
     .then(() => {
-      dispatch(_loadOrders(userId))
+      dispatch(_loadOrders(userId));
+
+      //TODO: This is hacky and needs a cleaning
+      dispatch(_loadLineItems(userId, orderId));
     })
     .catch(err => {
       throw err;
