@@ -9,7 +9,7 @@ const checkAdmin = require('./checkAdmin')
 
 //Auth Middleware
 router.use('/', async (req, res, next) => {
-    if (!req.user){
+    if (!req.user) {
         res.sendStatus(401)
     } else {
         next()
@@ -20,7 +20,7 @@ router.use('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let lineItems = await db.LineItem.findAll({})
@@ -44,15 +44,21 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-//Get a Line Item
-router.get('/:id', async (req, res, next) => {
+//Get a user's cart Line Items
+router.get('/user/:userId/cart/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        let lineItem = await db.LineItem.findById(req.params.id)
-        if ((reqUser !== lineItem.dataValues.userId) && (!await checkAdmin(reqUser))) {
+        if ((reqUser !== req.params.userId) && (!await checkAdmin(reqUser))) {
             return res.sendStatus(401)
         }
-        res.send(lineItem)
+        let lineItems = await db.LineItem.findAll({
+            include: [db.Product],
+            where: {
+                userId: reqUser,
+                orderId: req.params.id
+            },
+        });
+        res.send(lineItems)
     } catch (ex) {
         next(ex)
     }
@@ -86,8 +92,8 @@ router.put('/:id', async (req, res, next) => {
             return res.sendStatus(401)
         }
         let editedLineItem = await db.LineItem.findById(req.params.id)
-        await editedLineItem.update(req.body) 
-        res.send(editedLineItem)
+        await editedLineItem.update(req.body)
+        res.send(lineItem)
     } catch (ex) {
         next(ex)
     }
