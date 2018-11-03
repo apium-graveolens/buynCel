@@ -62,11 +62,19 @@ router.get('/facebook/callback', async (req, res, next) => {
 
     let user = await User.findOne({
       where: {
-        facebookEmail: facebookData.email
+        email: facebookData.email
       }
     })
     if (!user){
-      return next(new Error('User account not found'))
+      if (facebookData.email){
+        user = User.create({
+          email: facebookData.email,
+          passowrd: '',
+          isAdmin: false
+        })
+      } else {
+      return next(new Error('Facebook User Validation Failed.'))
+      }
     }
     const token = jwt.encode({id: user.id}, process.env.JWT_SECRET)
     res.send({token})
