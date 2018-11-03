@@ -81,9 +81,9 @@ class NavBar extends Component {
         </ListItem>
         <Divider />
         {auth.id ? (
-          <ListItem button>
+          <ListItem buttonon onClick={this.props.logout}>
             <ListItemIcon><AccountCircle /></ListItemIcon>
-            <ListItemText primary='Account' />
+            <ListItemText primary='Logout' />
           </ListItem>
         ) : (
             ''

@@ -32,6 +32,7 @@ class SignUp extends Component {
   initCart = () => {
     const { auth, order, loadCartLineItems } = this.props;
     //if both user and order have been loaded
+    console.log(order)
     if (order) loadCartLineItems(auth.id, order.id);
   }
   handleClickUp = (direction, lineItem) => {
@@ -48,6 +49,10 @@ class SignUp extends Component {
     }
   }
   formatTotal = total => '$' + total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  removeItem = item => {
+    const { order, auth } = this.props;
+    this.props.remove(item, auth.id, order.id);
+  }
   render() {
     const { classes, lineItems } = this.props;
     return (
@@ -60,6 +65,7 @@ class SignUp extends Component {
                 <TableCell numeric>Quantity</TableCell>
                 <TableCell numeric>Unit Price</TableCell>
                 <TableCell numeric>Total Price</TableCell>
+                <TableCell>Remove</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -81,6 +87,11 @@ class SignUp extends Component {
                     <TableCell numeric>{item.product.price}</TableCell>
                     <TableCell numeric>{item.product.price * item.quantity}</TableCell>
                     <TableCell numeric>{item.protein}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => this.removeItem(item)} color="secondary">
+                        Remove
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -112,7 +123,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
     update: (lineItem, direction, userId, cartId) => dispatch(_updateLineItem(lineItem, direction, userId, cartId)),
-    // remove: () => dispatch(_removeLineItem(lineItem, user.id)),
+    remove: (lineItem, userId, orderId) => dispatch(_removeLineItem(lineItem, userId, orderId)),
   }
 };
 
