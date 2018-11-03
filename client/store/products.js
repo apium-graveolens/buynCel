@@ -33,7 +33,9 @@ export const _loadProducts = (categoryFilter,titleFilter) => dispatch => (
         })
       }
       if(titleFilter) {
-        _products = products.filter( prod => prod.title.toLowerCase().includes(titleFilter.toLowerCase()) )
+        _products = products.filter( prod => 
+          prod.title.toLowerCase().includes(titleFilter.toLowerCase())
+        )
       }
       dispatch(loadProducts(_products))
     })

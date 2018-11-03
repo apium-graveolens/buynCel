@@ -9,9 +9,8 @@ class ProductList extends Component {
     const { auth, order } = this.props;
     return (
       <div>
-        <div>
           <SearchBar/> 
-        </div>
+          <hr/>
         <Grid container justify="center">
           {this.props.products.map(product => (
             <ProductSingle
@@ -22,6 +21,7 @@ class ProductList extends Component {
             />
           ))}
         </Grid>
+        <hr/>
       </div>
     )
   }

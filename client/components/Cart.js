@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles, Grid, Button, Table, TableHead, TableCell, TableRow, TableBody, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom'
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { _loadLineItems } from '../store/lineItems';
 
@@ -93,6 +94,12 @@ class SignUp extends Component {
               </Typography>
             </Grid>
           </Grid>
+          <Button
+            to={'/checkout'}
+            component={Link}
+          >
+            Checkout
+          </Button>
         </Grid>
       </Grid>
     )

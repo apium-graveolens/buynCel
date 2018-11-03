@@ -25,6 +25,7 @@ class SearchBar extends Component {
     }
 
     setTitleFilter(e){
+        if(titleFilters.length == 0) return this.resetFilter();
         this.setState({titleFilter: e.target.value})
         this.props.reloadProducts(null, this.state.titleFilter)
     }
@@ -35,18 +36,15 @@ class SearchBar extends Component {
             categoryFilters: [],
             titleFilter: ''
         })
-
         this.props.reloadProducts();
     }
 
     switchMode(mode){
-
         this.setState({
             categoryFilter: [],
             titleFilter: '',
             mode
         })
-
     }
 
     render(){

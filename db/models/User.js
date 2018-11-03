@@ -26,6 +26,12 @@ const User = conn.define('user', {
     validate: {
       isEmail: true,
     }
+  },
+  savedAddress: {
+    type: Seq.STRING
+  },
+  savedPaymentMethod: {
+    type: Seq.STRING
   }
 });
 
