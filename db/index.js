@@ -94,10 +94,9 @@ const syncSeed = async () => {
                 productId: choppedCelery.id
             })
             const lex = await User.create({
-                email: 'lex@email.com',
+                email: 'lexbedwell@gmail.com',
                 password: '123',
-                isAdmin: true,
-                facebookEmail: 'lexbedwell@gmail.com'
+                isAdmin: true
             })
             const sam = await User.create({
                 email: 'sam@email.com',
@@ -134,7 +133,6 @@ const syncSeed = async () => {
             await choppedCelery.addReview(chopRev2);
         })
 }
-
 
 module.exports = {
     syncSeed,

@@ -11,6 +11,26 @@ const Order = conn.define('order', {
       type: conn.Sequelize.ENUM('cart', 'created', 'processing', 'cancelled', 'completed', 'delivered'),
       allowNull: false,
       defaultValue: 'cart'
+    },
+    addressName: {
+      type: Seq.STRING,
+      allowNull: true
+    },
+    addressLine: {
+      type: Seq.STRING,
+      allowNull: true
+    },
+    addressCity: {
+      type: Seq.STRING,
+      allowNull: true
+    },
+    addressState: {
+      type: Seq.STRING,
+      allowNull: true
+    },
+    addressZip: {
+      type: Seq.STRING,
+      allowNull: true
     }
 });
 
