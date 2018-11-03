@@ -1,5 +1,7 @@
 const conn = require('./connection');
 
+const base64Images = require('./models/data/base64Images')
+
 //--- Bring in Models ---
 const User = require('./models/User');
 const Product = require('./models/Product');
@@ -7,6 +9,7 @@ const Review = require('./models/Review');
 const Order = require('./models/Order');
 const Category = require('./models/Category')
 const LineItem = require('./models/LineItem')
+const Image = require('./models/Image')
 
 //--- Define Relations ---
 Review.belongsTo(Product);
@@ -23,6 +26,8 @@ LineItem.belongsTo(Product)
 
 Category.belongsToMany(Product, { through: 'description' })
 Product.belongsToMany(Category, { through: 'description' })
+
+Image.belongsTo(Product)
 
 //--- Test seed data ---
 
@@ -76,6 +81,18 @@ const syncSeed = async () => {
                 price: 400,
                 quantity: 0
             })
+            const defaultImage = await Image.create({
+                data: base64Images.default
+            })
+            const rawCeleryImage = await Image.create({
+                data: base64Images.rawCelery,
+                productId: rawCelery.id
+            })
+
+            const choppedCeleryImage = await Image.create({
+                data: base64Images.choppedCelery,
+                productId: choppedCelery.id
+            })
             const lex = await User.create({
                 email: 'lex@email.com',
                 password: '123',
@@ -124,5 +141,6 @@ module.exports = {
     Review,
     Order,
     Category,
-    LineItem
+    LineItem,
+    Image
 }

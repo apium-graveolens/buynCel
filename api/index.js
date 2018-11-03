@@ -35,6 +35,9 @@ router.use('/products', require('./products'))
 //CATEGORY ROUTES
 router.use('/categories', require('./categories'))
 
+//IMAGE ROUTES
+router.use('/images', require('./images'))
+
 //ORDER ROUTES
 router.use('/orders', require('./orders'))
 
