@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route, withRouter } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { _loadProducts } from '../store/products';
 import NavBar from './NavBar';
@@ -8,6 +8,7 @@ import ProductList from './ProductList';
 import SignUp from './SignUp';
 import ProductDetail from './ProductDetail';
 import Login from './Login';
+import Cart from './Cart';
 import { _exchangeTokenForAuth } from '../store/auth';
 
 class Main extends Component {
@@ -27,6 +28,7 @@ class Main extends Component {
           <Route exact path='/products/:id' component={ProductDetail} />
           <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/cart' component={Cart} />
         </div>
       </div>
     )

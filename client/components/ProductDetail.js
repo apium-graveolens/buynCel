@@ -21,7 +21,6 @@ const ProductDetail = ({ product }) => {
 };
 
 const mapStateToProps = ({ products }, { match }) => {
-  console.log('mapping in detail')
   const id = match.params.id * 1;
   return {
     product: products[0] ? products.find(product => product.id == id) : {}
