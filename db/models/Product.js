@@ -22,7 +22,7 @@ const Product = conn.define('product', {
         allowNull: false
     },
     photo: {
-        type: Seq.STRING,
+        type: Seq.TEXT,
         allowNull: false,
         defaultValue: '/default.png'
     }
