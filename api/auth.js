@@ -7,12 +7,6 @@ const jwt = require('jwt-simple')
 
 const {User} = require('../db')
 
-try {
-  Object.assign(process.env, require('./.env.js'))
-} catch (ex) {
-  console.log(ex)
-}
-
 //TOKEN AUTH ROUTES
 
 //Send user their token
@@ -58,7 +52,7 @@ router.get('/facebook/callback', async (req, res, next) => {
 
     response = await axios.get(`https://graph.facebook.com/me?fields=email&access_token=${access_token}`)
     let facebookData = response.data
-    //console.log(facebookData)
+    console.log(facebookData)
 
     let user = await User.findOne({
       where: {

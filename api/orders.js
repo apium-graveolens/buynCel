@@ -97,6 +97,9 @@ router.post('/', async (req, res, next) => {
         }
         let newOrder = await db.Order.create(req.body)
         await newOrder.sendReceivedEmail()
+        if (req.body.payWithStripe === true){
+            await newOrder.payWithStripe()
+        }
         res.send(newOrder)
     } catch (ex) {
         next(ex)
