@@ -11,21 +11,11 @@ const User = conn.define('user', {
   },
   password: {
     type: Seq.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    allowNull: true
   },
   isAdmin: {
     type: Seq.BOOLEAN,
     defaultValue: false
-  },
-  facebookEmail: {
-    type: Seq.STRING,
-    unique: true,
-    validate: {
-      isEmail: true,
-    }
   },
   savedAddress: {
     type: Seq.STRING
