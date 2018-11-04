@@ -36,6 +36,7 @@
     "jwt-simple": "^0.5.5",
     "mocha": "^5.2.0",
     "mock-local-storage": "^1.1.7",
+    "moment": "^2.22.2",
     "nodemailer": "^4.6.8",
     "pg": "^7.6.0",
     "react": "^16.6.0",

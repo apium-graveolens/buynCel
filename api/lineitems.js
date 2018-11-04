@@ -44,6 +44,26 @@ router.post('/', async (req, res, next) => {
     }
 })
 
+//Get all of a user's Line Items
+
+router.get('/user/:id', async (req, res, next) => {
+    try {
+        let reqUser = req.user.dataValues.id
+        if ((reqUser !== req.params.userId) && (!await checkAdmin(reqUser))) {
+            return res.sendStatus(401)
+        }
+        let lineItems = await db.LineItem.findAll({
+            include: [db.Product],
+            where: {
+                userId: reqUser,
+            },
+        });
+        res.send(lineItems)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 //Get a user's cart Line Items
 router.get('/user/:userId/cart/:id', async (req, res, next) => {
     try {

@@ -11,18 +11,27 @@ const checkAdmin = require('./checkAdmin')
 router.post('/', async (req, res, next) => {
     try {
         let userToCreate = req.body
-        let newUser = await db.User.create({...userToCreate, isAdmin: false})
+        let newUser = await db.User.create({ ...userToCreate, isAdmin: false })
         res.send(newUser)
     } catch (ex) {
         next(ex)
     }
 })
 
+// router.get('/:id/name', async (req, res, next) => {
+//     try {
+//         let user = await db.User.findById(req.params.id)
+//         res.send(user.email)
+//     } catch (ex) {
+//         next(ex)
+//     }
+// })
+
 //AUTH ROUTES
 
 //Auth Middleware
 router.use('/', async (req, res, next) => {
-    if (!req.user){
+    if (!req.user) {
         return res.sendStatus(401)
     } else {
         next()
@@ -33,7 +42,7 @@ router.use('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let users = await db.User.findAll({})
@@ -66,7 +75,7 @@ router.put('/:id', async (req, res, next) => {
         }
         let newUserData = req.body
         let editedUser = await db.User.findById(req.params.id)
-        await editedUser.update({...newUserData, isAdmin: false})
+        await editedUser.update({ ...newUserData, isAdmin: false })
         res.send(editedUser)
     } catch (ex) {
         next(ex)
@@ -95,14 +104,14 @@ router.delete('/:id', async (req, res, next) => {
 router.get('/:id/toggleadmin', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        if (await checkAdmin(reqUser) === false){
+        if (await checkAdmin(reqUser) === false) {
             return res.sendStatus(401)
         }
         let editedUser = await db.User.findById(req.params.id)
-        if (editedUser.isAdmin === false){
-            await editedUser.update({isAdmin: true})
+        if (editedUser.isAdmin === false) {
+            await editedUser.update({ isAdmin: true })
         } else {
-            await editedUser.update({isAdmin: false})
+            await editedUser.update({ isAdmin: false })
         }
         res.send(editedUser)
     } catch (ex) {
