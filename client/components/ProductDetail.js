@@ -1,9 +1,9 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import ReviewList from './ReviewList';
+import { Grid, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 const ProductDetail = ({ product }) => {
-
   const { title, description, price, photo } = product;
   return (
     <Grid container justify="center">
@@ -15,6 +15,9 @@ const ProductDetail = ({ product }) => {
         <hr />
         <p>{description}</p>
         <p>${price}</p>
+      </Grid>
+      <Grid item xs={9}>
+        <ReviewList product={product} />
       </Grid>
     </Grid>
   )
