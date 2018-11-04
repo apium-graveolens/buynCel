@@ -17,7 +17,7 @@ class SearchBar extends Component {
     }
 
     setCategoryFilter(categoryFilters){
-        if(categoryFilters.length == 0) return this.resetFilter();
+        //if(this.state.categoryFilters.length == 0) return this.resetFilter();
         this.setState({categoryFilters}, () => {
             const filters = this.state.categoryFilters.map( c => c.value)
             this.props.reloadProducts(filters,null)
@@ -25,13 +25,12 @@ class SearchBar extends Component {
     }
 
     setTitleFilter(e){
-        if(titleFilters.length == 0) return this.resetFilter();
+        //if(this.state.titleFilter.length == 0) return this.resetFilter();
         this.setState({titleFilter: e.target.value})
         this.props.reloadProducts(null, this.state.titleFilter)
     }
 
     resetFilter(){
-        console.log('worked?')
         this.setState({
             categoryFilters: [],
             titleFilter: ''
@@ -40,11 +39,8 @@ class SearchBar extends Component {
     }
 
     switchMode(mode){
-        this.setState({
-            categoryFilter: [],
-            titleFilter: '',
-            mode
-        })
+        this.resetFilter();
+        this.setState({mode})
     }
 
     render(){
