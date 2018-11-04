@@ -61,19 +61,22 @@ const syncSeed = async () => {
                 title: 'Raw Celery',
                 description: 'It is raw celery',
                 price: 100,
-                quantity: 11
+                quantity: 11,
+                photo: base64Images.rawCelery
             })
             const choppedCelery = await Product.create({
                 title: 'Chopped Celery',
                 description: 'It is chopped celery',
                 price: 200,
-                quantity: 22
+                quantity: 22,
+                photo: base64Images.choppedCelery
             })
             const superChoppedCelery = await Product.create({
                 title: 'Super Chopped Celery',
                 description: 'It is super chopped celery',
                 price: 300,
-                quantity: 33
+                quantity: 33,
+                photo: base64Images.choppedCelery
             })
             const discontinuedCelery = await Product.create({
                 title: 'Discontinued Celery',
