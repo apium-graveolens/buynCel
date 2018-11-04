@@ -1,6 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
+import reviews from './reviews';
 import lineItems from './lineItems';
 import products from './products';
 import auth from './auth';
@@ -9,6 +10,7 @@ import categories from './categories'
 
 //combine all slices of state
 const reducer = combineReducers({
+  reviews,
   lineItems,
   products,
   auth,

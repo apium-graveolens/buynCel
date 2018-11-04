@@ -3,7 +3,8 @@ const conn = require('../connection');
 
 const User = require('./User')
 
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2'); //<--This is a test key
 
 const Order = conn.define('order', {
     id: {
@@ -15,6 +16,10 @@ const Order = conn.define('order', {
       type: conn.Sequelize.ENUM('cart', 'created', 'processing', 'cancelled', 'completed', 'delivered'),
       allowNull: false,
       defaultValue: 'cart'
+    },
+    isPaid: {
+        type: Seq.BOOLEAN,
+        defaultValue: false
     },
     addressName: {
       type: Seq.STRING,
@@ -43,7 +48,7 @@ let mailOptions
 
 let generateEmail = (userData) => {
     return {
-        from: 'LexBedwell>', 
+        from: 'LexBedwell', 
         to: userData.email, 
         subject: 'Order Received', 
         text: `${userData.text} ${userData.orderId}` 
@@ -68,7 +73,7 @@ Order.prototype.sendReceivedEmail = async function(){
     let userObj = {
         email: orderEmail,
         orderId: this.id,
-        text: "Order Received"
+        text: 'Order Received'
     }
     mailOptions = generateEmail(userObj)
     transporter.sendMail(mailOptions, function(error, info){
@@ -88,7 +93,7 @@ Order.prototype.sendShippedEmail = async function(){
   let userObj = {
       email: orderEmail,
       orderId: this.id,
-      text: "Order Shipped"
+      text: 'Order Shipped'
   }
   mailOptions = generateEmail(userObj)
   transporter.sendMail(mailOptions, function(error, info){
@@ -108,16 +113,33 @@ Order.prototype.sendDeliveredEmail = async function(){
   let userObj = {
       email: orderEmail,
       orderId: this.id,
-      text: "Order Delivered"
+      text: 'Order Delivered'
   }
   mailOptions = generateEmail(userObj)
   transporter.sendMail(mailOptions, function(error, info){
       if (error) {
           console.log(error)
       } else {
-          console.log('Message sent! - DELIVERED');
+          console.log('Message sent! - ORDER DELIVERED');
       }
   })
+}
+
+Order.prototype.payWithStripe = async function(){
+    //**Example TEST DATA**
+    const charge = await stripe.charges.create({
+        amount: 2000,
+        currency: 'usd',
+        source: 'tok_amex',
+        description: 'My first payment'
+      });
+      if (charge.paid === true){
+          this.isPaid = true
+          console.log('Paid!')
+      } else {
+          console.log('Payment failed!')
+      }
+      return (this)
 }
 
 module.exports = Order
