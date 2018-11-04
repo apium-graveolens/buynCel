@@ -16,6 +16,12 @@ const User = conn.define('user', {
   isAdmin: {
     type: Seq.BOOLEAN,
     defaultValue: false
+  },
+  savedAddress: {
+    type: Seq.STRING
+  },
+  savedPaymentMethod: {
+    type: Seq.STRING
   }
 });
 

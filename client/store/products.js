@@ -20,12 +20,28 @@ export const deleteProduct = id => ({
 })
 
 //thunk creators | underscore(_) denotes a thunk
-export const _loadProducts = () => dispatch => (
+export const _loadProducts = (categoryFilter,titleFilter) => dispatch => (
   axios.get('/api/products')
     .then(response => response.data)
-    .then(products => dispatch(loadProducts(products)))
+    .then(products => {
+      let _products = products
+      if(categoryFilter){
+        _products = products.filter( prod => {
+          return prod.categories.some( category => {
+            return categoryFilter.includes(category.id)
+          })
+        })
+      }
+      if(titleFilter) {
+        _products = products.filter( prod => 
+          prod.title.toLowerCase().includes(titleFilter.toLowerCase())
+        )
+      }
+      dispatch(loadProducts(_products))
+    })
     .catch(err => { throw err })
 );
+
 export const _addProduct = product => dispatch => (
   axios.post('/api/products', product)
     .then(response => response.data)

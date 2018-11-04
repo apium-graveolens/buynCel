@@ -5,13 +5,15 @@ import lineItems from './lineItems';
 import products from './products';
 import auth from './auth';
 import orders from './orders';
+import categories from './categories'
 
 //combine all slices of state
 const reducer = combineReducers({
   lineItems,
   products,
   auth,
-  orders
+  orders,
+  categories
 });
 
 //export the created store, with thunk and logger middleware applied
