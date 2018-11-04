@@ -11,6 +11,12 @@ app.use('/api', require('./api'))
 
 db.syncSeed()
 
+try {
+    Object.assign(process.env, require('./.env.js'))
+  } catch (ex) {
+    console.log(ex)
+  }
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {

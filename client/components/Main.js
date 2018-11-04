@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { _loadProducts } from '../store/products';
+import { _loadCategories } from '../store/categories'
+import {_loadOrders} from '../store/orders'
 import NavBar from './NavBar';
 import Home from './Home';
 import ProductList from './ProductList';
@@ -9,6 +11,7 @@ import SignUp from './SignUp';
 import ProductDetail from './ProductDetail';
 import Login from './Login';
 import Cart from './Cart';
+import Checkout from './Checkout'
 import { _exchangeTokenForAuth } from '../store/auth';
 
 class Main extends Component {
@@ -29,6 +32,7 @@ class Main extends Component {
           <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/cart' component={Cart} />
+          <Route exact path='/checkout' component={Checkout} />
         </div>
       </div>
     )
@@ -38,6 +42,8 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => ({
   init: () => {
     dispatch(_loadProducts())
+    dispatch(_loadCategories())
+    dispatch(_loadOrders())
     dispatch(_exchangeTokenForAuth())
   }
 });
