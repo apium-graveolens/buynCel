@@ -19,7 +19,6 @@ class ProductSingle extends Component {
     const direction = e.target.innerHTML;
     const { lineItem, create, update, remove } = this.props;
     if (!lineItem) {
-      console.log("CREATING")
       create();
     }
     else if (lineItem.quantity == 1 && direction == '-') remove();
@@ -47,7 +46,7 @@ class ProductSingle extends Component {
             </CardContent>
           </CardActionArea>
           {product.categories.map(category => (
-            <Chip label={category.name} />
+            <Chip key={category.name} label={category.name} />
           ))}
           <CardActions>
             <Button onClick={this.handleClick} value="plus" size="small" color="primary">

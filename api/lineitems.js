@@ -68,6 +68,8 @@ router.get('/user/:id', async (req, res, next) => {
 router.get('/user/:userId/cart/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
+        console.log(typeof reqUser);
+        console.log(typeof req.params.userId)
         if ((reqUser !== req.params.userId) && (!await checkAdmin(reqUser))) {
             return res.sendStatus(401)
         }

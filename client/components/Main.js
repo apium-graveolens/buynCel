@@ -3,7 +3,7 @@ import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { _loadProducts } from '../store/products';
 import { _loadCategories } from '../store/categories'
-import {_loadOrders} from '../store/orders'
+import { _loadOrders } from '../store/orders'
 import NavBar from './NavBar';
 import Home from './Home';
 import ProductList from './ProductList';
@@ -43,7 +43,7 @@ const mapDispatchToProps = dispatch => ({
   init: () => {
     dispatch(_loadProducts())
     dispatch(_loadCategories())
-    dispatch(_loadOrders())
+    // dispatch(_loadOrders())
     dispatch(_exchangeTokenForAuth())
   }
 });
