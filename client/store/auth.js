@@ -35,6 +35,7 @@ export const _exchangeTokenForAuth = () => dispatch => {
     })
     .catch(err => { throw err });
 };
+
 export const _login = (credentials, history) => dispatch => (
   //send login credentials to server
   axios.post('/api/auth', credentials)
@@ -48,6 +49,13 @@ export const _login = (credentials, history) => dispatch => (
     })
     .catch(err => { throw err })
 );
+
+export const _editUser = (userId, newUser) => dispatch => {
+  axios.put(`/api/users/${userId}`, newUser)
+      .then(response => response.data)
+      .then( user => { dispatch(setUser(user)) } )
+      .catch( err => { throw err })
+}
 
 export const logout = () => dispatch => {
   window.localStorage.clear();
