@@ -29,7 +29,7 @@ class Main extends Component {
         <div style={styles}>
           <Route exact path='/products' component={ProductList} />
           <Route exact path='/products/:id' component={ProductDetail} />
-          <Route exact path='/sign-up' component={SignUp} />
+          <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/cart' component={Cart} />
           <Route exact path='/checkout' component={Checkout} />
