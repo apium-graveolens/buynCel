@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { withStyles, Grid, TextField, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { withStyles, Grid, TextField, Button, Typography } from '@material-ui/core';
 import AccountBox from '@material-ui/icons/AccountBox';
 import { connect } from 'react-redux';
 import { _login } from '../store/auth';
@@ -13,11 +14,15 @@ const styles = {
     width: '100%',
   },
   button: {
-    marginTop: 30
+    marginTop: 30,
+    marginBottom: 30
   },
   accountBox: {
     fontSize: 150,
     textAlign: 'center',
+  },
+  signUp: {
+    textAlign: 'center'
   }
 }
 
@@ -71,6 +76,9 @@ class Login extends Component {
                   variant='contained'
                   type="submit"
                 >Login</Button>
+                <Typography className={classes.signUp}>
+                  Don't have an account? <Link to="/signup">Sign Up!</Link>
+                </Typography>
               </Grid>
             </form>
           </div>

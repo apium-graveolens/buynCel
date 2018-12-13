@@ -8,10 +8,15 @@ const styles = {
   card: {
     maxWidth: 345,
   },
+  container: {
+    margin: 20
+  },
   media: {
     height: 140,
   },
-
+  chip: {
+    margin: 3
+  }
 };
 
 class ProductSingle extends Component {
@@ -28,7 +33,7 @@ class ProductSingle extends Component {
     const { lineItem, classes, product } = this.props;
     const quantity = lineItem ? lineItem.quantity : 0;
     return (
-      <Grid item xs={12} lg={3}>
+      <Grid item xs={12} lg={3} className={classes.container}>
         <Card className={classes.card}>
           <CardActionArea to={`/products/${product.id}`} component={Link}>
             <CardMedia
@@ -36,17 +41,17 @@ class ProductSingle extends Component {
               image={product.photo}
               title="Contemplative Reptile"
             />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {product.name}
-              </Typography>
-              <Typography>
-                {product.description}
-              </Typography>
-            </CardContent>
           </CardActionArea>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {product.name}
+            </Typography>
+            <Typography>
+              {product.description}
+            </Typography>
+          </CardContent>
           {product.categories.map(category => (
-            <Chip key={category.name} label={category.name} />
+            <Chip className={classes.chip} key={category.name} label={category.name} />
           ))}
           <CardActions>
             <Button onClick={this.handleClick} value="plus" size="small" color="primary">
@@ -71,7 +76,7 @@ class ProductSingle extends Component {
 }
 
 const mapDispatchToProps = (dispatch, { order, product, user }) => {
-  const lineItem = order ? order.lineItems.find(item => item.productId == product.id) : undefined;
+  const lineItem = order ? order.lineItems ? order.lineItems.find(item => item.productId == product.id) : undefined : undefined;
   return {
     lineItem,
     create: () => dispatch(_createLineItem(order.id, product.id, user.id)),

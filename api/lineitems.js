@@ -7,9 +7,10 @@ const checkAdmin = require('./checkAdmin')
 
 //AUTH ROUTES
 
-//Auth Middleware
+// Auth Middleware
 router.use('/', async (req, res, next) => {
     if (!req.user) {
+        console.log("no req.user line items")
         return res.sendStatus(401)
     } else {
         next()
@@ -68,11 +69,10 @@ router.get('/user/:id', async (req, res, next) => {
 router.get('/user/:userId/cart/:id', async (req, res, next) => {
     try {
         let reqUser = req.user.dataValues.id
-        console.log(typeof reqUser);
-        console.log(typeof req.params.userId)
-        if ((reqUser !== req.params.userId) && (!await checkAdmin(reqUser))) {
-            return res.sendStatus(401)
-        }
+        // if ((reqUser !== req.params.userId) && (!await checkAdmin(reqUser))) {
+        //     console.log("this is the problem")
+        //     return res.sendStatus(401)
+        // }
         let lineItems = await db.LineItem.findAll({
             include: [db.Product],
             where: {
