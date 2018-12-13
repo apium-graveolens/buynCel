@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles, Grid, Button, Table, TableHead, TableCell, TableRow, TableBody, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { _loadLineItems } from '../store/lineItems';
 
@@ -33,7 +33,7 @@ class SignUp extends Component {
   initCart = () => {
     const { auth, order, loadCartLineItems } = this.props;
     //if both user and order have been loaded
-    console.log(order)
+    console.log("ORDER", order)
     if (order) loadCartLineItems(auth.id, order.id);
   }
   handleClickUp = (direction, lineItem) => {
