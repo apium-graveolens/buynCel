@@ -19,6 +19,7 @@ export const _exchangeTokenForAuth = () => dispatch => {
   }
 
   // else, send token to server to get back corresponding user
+  console.log("EXCHANGING")
   return axios.get('/api/auth', {
     headers: {
       authorization: token
@@ -52,6 +53,16 @@ export const _login = (credentials, history) => dispatch => (
 export const logout = () => dispatch => {
   window.localStorage.clear();
   dispatch(setUser({}));
+}
+
+export const _createUser = (user, history) => dispatch => {
+  //make new user post call to API
+  return axios.post('/api/users', user)
+    .then(res => res.data)
+    .then(user => {
+      //using full user object here rather than just email and pass credentials. not very semantic.
+      dispatch(_login(user, history))
+    })
 }
 
 export default (state = {}, action) => {

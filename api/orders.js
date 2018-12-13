@@ -10,6 +10,7 @@ const checkAdmin = require('./checkAdmin')
 //Auth Middleware
 router.use('/', async (req, res, next) => {
     if (!req.user) {
+        console.log("No req.user");
         res.sendStatus(401)
     } else {
         next()
@@ -97,7 +98,7 @@ router.post('/', async (req, res, next) => {
         }
         let newOrder = await db.Order.create(req.body)
         await newOrder.sendReceivedEmail()
-        if (req.body.payWithStripe === true){
+        if (req.body.payWithStripe === true) {
             await newOrder.payWithStripe()
         }
         res.send(newOrder)

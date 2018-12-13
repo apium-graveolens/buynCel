@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { _loadLineItems } from './lineItems';
 
-const tokenHeader = {
+let tokenHeader = {
   headers: {
     authorization: window.localStorage.getItem('token')
   }
@@ -71,12 +71,17 @@ export const _placeOrder = id => dispatch => (
       dispatch(_loadOrders())
     })
 );
-export const _loadOrders = id => dispatch => (
-  axios.get(`/api/orders/user/${id}`, tokenHeader)
+export const _loadOrders = id => dispatch => {
+  tokenHeader = {
+    headers: {
+      authorization: window.localStorage.getItem('token')
+    }
+  };
+  return axios.get(`/api/orders/user/${id}`, tokenHeader)
     .then(response => response.data)
     .then(orders => dispatch(loadOrders(orders)))
     .catch(err => { console.log('here'); })
-);
+};
 export const _addOrder = order => dispatch => (
   axios.post('/api/orders', order)
     .then(response => response.data)

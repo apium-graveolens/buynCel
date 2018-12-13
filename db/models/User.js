@@ -2,6 +2,9 @@ const Seq = require('sequelize');
 const conn = require('../connection');
 
 const User = conn.define('user', {
+  name: {
+    type: Seq.STRING,
+  },
   email: {
     type: Seq.STRING,
     unique: true,

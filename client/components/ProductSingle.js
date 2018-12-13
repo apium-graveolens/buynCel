@@ -76,7 +76,8 @@ class ProductSingle extends Component {
 }
 
 const mapDispatchToProps = (dispatch, { order, product, user }) => {
-  const lineItem = order ? order.lineItems.find(item => item.productId == product.id) : undefined;
+  console.log("ORDER", order);
+  const lineItem = order ? order.lineItems ? order.lineItems.find(item => item.productId == product.id) : undefined : undefined;
   return {
     lineItem,
     create: () => dispatch(_createLineItem(order.id, product.id, user.id)),

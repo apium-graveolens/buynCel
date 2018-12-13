@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, TextField, Button, withStyles } from '@material-ui/core';
+import { _createUser } from '../store/auth';
 import { connect } from 'react-redux';
 
 const styles = {
@@ -30,7 +31,6 @@ class SignUp extends Component {
   }
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.props.state)
     this.props.createUser(this.state);
   }
   render() {
@@ -78,7 +78,7 @@ class SignUp extends Component {
 }
 
 const mapDispatchToProps = (dispatch, { history }) => ({
-  createUser: user => dispatch(_createUser(user), history)
+  createUser: user => dispatch(_createUser(user, history))
 });
 
 export default withStyles(styles)(connect(null, mapDispatchToProps)(SignUp));
