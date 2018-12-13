@@ -41,15 +41,15 @@ class ProductSingle extends Component {
               image={product.photo}
               title="Contemplative Reptile"
             />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {product.name}
-              </Typography>
-              <Typography>
-                {product.description}
-              </Typography>
-            </CardContent>
           </CardActionArea>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {product.name}
+            </Typography>
+            <Typography>
+              {product.description}
+            </Typography>
+          </CardContent>
           {product.categories.map(category => (
             <Chip className={classes.chip} key={category.name} label={category.name} />
           ))}

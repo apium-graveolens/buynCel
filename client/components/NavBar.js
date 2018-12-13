@@ -5,12 +5,98 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ListAlt from '@material-ui/icons/ListAlt';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
+import InputBase from '@material-ui/core/InputBase';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { connect } from 'react-redux';
+import SearchIcon from '@material-ui/icons/Search';
 import { logout } from '../store/auth';
+import Search from './Search';
 
-const styles = {
+const suggestions = [
+  { label: 'Afghanistan' },
+  { label: 'Aland Islands' },
+  { label: 'Albania' },
+  { label: 'Algeria' },
+  { label: 'American Samoa' },
+  { label: 'Andorra' },
+  { label: 'Angola' },
+  { label: 'Anguilla' },
+  { label: 'Antarctica' },
+  { label: 'Antigua and Barbuda' },
+  { label: 'Argentina' },
+  { label: 'Armenia' },
+  { label: 'Aruba' },
+  { label: 'Australia' },
+  { label: 'Austria' },
+  { label: 'Azerbaijan' },
+  { label: 'Bahamas' },
+  { label: 'Bahrain' },
+  { label: 'Bangladesh' },
+  { label: 'Barbados' },
+  { label: 'Belarus' },
+  { label: 'Belgium' },
+  { label: 'Belize' },
+  { label: 'Benin' },
+  { label: 'Bermuda' },
+  { label: 'Bhutan' },
+  { label: 'Bolivia, Plurinational State of' },
+  { label: 'Bonaire, Sint Eustatius and Saba' },
+  { label: 'Bosnia and Herzegovina' },
+  { label: 'Botswana' },
+  { label: 'Bouvet Island' },
+  { label: 'Brazil' },
+  { label: 'British Indian Ocean Territory' },
+  { label: 'Brunei Darussalam' },
+].map(suggestion => ({
+  value: suggestion.label,
+  label: suggestion.label,
+}));
+
+const styles = theme => ({
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 120,
+      '&:focus': {
+        width: 200,
+      },
+    },
+  },
   root: {
     flexGrow: 1,
+  },
+  search: {
+    display: 'flex',
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit,
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   grow: {
     flexGrow: 1,
@@ -34,7 +120,7 @@ const styles = {
   account: {
     marginTop: '13px',
   },
-};
+});
 
 class NavBar extends Component {
   state = {
@@ -48,26 +134,12 @@ class NavBar extends Component {
       [side]: open,
     });
   };
-
-  // handleClick = e => {
-  //   this.setState({ anchorEl: e.currentTarget })
-  // };
-  // handleAccountMenu = e => {
-  //   this.setState({ anchorAccount: e.currentTarget })
-  // }
-  // handleAccountClose = () => {
-  //   this.setState({ anchorAccount: null });
-  // };
-  // handleClose = () => {
-  //   this.setState({ anchorEl: null });
-  // };
   render() {
     const { classes, auth } = this.props;
     const { anchorEl, anchorAccount } = this.state;
     const open = Boolean(anchorEl);
     const accountOpen = Boolean(anchorAccount);
     const isHome = this.props.location.pathname == '/';
-
 
     const leftMenu = (
       <List>
@@ -109,15 +181,6 @@ class NavBar extends Component {
                     fontSize="large"
                   />
                 </IconButton>
-                {/* <Menu
-                  id="fade-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem component={Link} to="/products" onClick={this.handleClose}>Products</MenuItem>
-                  <MenuItem component={Link} to="/sign-up" onClick={this.handleClose}>Sign Up</MenuItem>
-                </Menu> */}
                 <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
                   <div
                     tabIndex={0}
@@ -134,6 +197,25 @@ class NavBar extends Component {
                   </Typography>
                 )}
               </Grid>
+              <div className={classes.grow}></div>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                {/* <Search
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                /> */}
+                <InputBase
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                />
+              </div>
               <Grid item className={classes.account}>
                 {auth.id ? (
                   <IconButton onClick={this.handleAccountMenu} >
@@ -147,19 +229,6 @@ class NavBar extends Component {
                       Login
                   </Button>
                   )}
-                {/* <Menu
-                  id="account-menu"
-                  anchorEl={anchorAccount}
-                  open={accountOpen}
-                  onClose={this.handleAccountClose}
-                >
-                  <MenuItem
-                  >
-                    Account
-                  </MenuItem>
-
-                  <MenuItem onClick={this.props.logout}>Logout</MenuItem>
-                </Menu> */}
               </Grid>
             </Grid>
           </Toolbar>
