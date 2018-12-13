@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {FormGroup, TextField, Button, Typography, Grid, Checkbox} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {_loadLineItems} from '../store/lineItems'
+import {_editUser} from '../store/auth'
 
 
 class Checkout extends Component {
@@ -29,6 +30,7 @@ class Checkout extends Component {
 
         this.changeAddressInputs = this.changeAddressInputs.bind(this)
         this.condenseAddress = this.condenseAddress.bind(this)
+        this.checkout = this.checkout.bind(this)
     }
 
     componentDidMount(){
@@ -62,8 +64,21 @@ class Checkout extends Component {
         })
     }
 
-    checkout(){
+    //---CHECKOUT FUNCITONS---
 
+    checkout(){
+        if(this.state.address.save){
+            this.saveAddress()
+        }
+
+        console.log(this.props.auth);
+    }
+
+
+    saveAddress(){
+        const userId = this.props.auth.id
+        const savedAddress = this.condenseAddress()
+        this.props.editUser(userId, {savedAddress})
     }
 
 
@@ -173,7 +188,7 @@ class Checkout extends Component {
 
                     <Button
                         onClick={()=>{
-                            console.log(this.condenseAddress())
+                            this.checkout();
                         }}
                     
                     >Complete Order
@@ -198,8 +213,10 @@ const mapStateToProps = ({ orders, auth, lineItems }) => {
         lineItems
     }
 }
+
 const mapDispatchToProps = dispatch => ({
-    loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId))
-})
+    loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
+    editUser: (userId, newUser) => dispatch(_editUser(userId,newUser))
+});
 
 export default connect(mapStateToProps,mapDispatchToProps)(Checkout)
