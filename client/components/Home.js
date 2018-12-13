@@ -30,7 +30,7 @@ class Home extends Component {
     return (
       <div>
         <Grid className={classes.root} container justify="center" alignItems="center">
-          <Grid className={classes.titleContainer} item xs={12} alignContent="center" lg={6}>
+          <Grid className={classes.titleContainer} item xs={12} lg={6}>
             <Typography className={classes.title} variant="h2">
               Celery
             </Typography>
