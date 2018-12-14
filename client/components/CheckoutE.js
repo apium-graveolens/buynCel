@@ -25,7 +25,8 @@ class Checkout extends Component {
                 cvc: '',
                 zip: '',
                 save: false
-            }
+            },
+            activeStep: 0,
         }
 
         this.changeAddressInputs = this.changeAddressInputs.bind(this)
@@ -120,26 +121,8 @@ class Checkout extends Component {
 
         return (
             <div>
-
                 <h1>Checkout</h1>
-
-
-                <form action="/api/stripe" method="POST">
-                    <script
-                        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                        data-key="pk_test_TYooMQauvdEDq54NiTphI7jx"
-                        data-amount="4.99"
-                        data-name="Stripe.com"
-                        data-description="Example charge"
-                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                        data-locale="auto"
-                        data-zip-code="true"
-                        data-billing-address="true"
-                    >
-                    </script>
-                </form>
-
-                {/* <Grid container direction={'row'}>
+                <Grid container direction={'row'}>
 
                     <Grid item xs={4} container direction={'column'} alignItems={'center'}>
 
@@ -212,7 +195,7 @@ class Checkout extends Component {
 
                     </Grid>
 
-                </Grid> */}
+                </Grid>
 
 
             </div>
