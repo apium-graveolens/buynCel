@@ -23,6 +23,8 @@ router.use(async (req, res, next) => {
   }
 })
 
+//SEARCH ROUTES
+router.use('/search', require('./search'))
 
 //STRIPE ROUTES
 router.use('/stripe', require('./stripe'))
