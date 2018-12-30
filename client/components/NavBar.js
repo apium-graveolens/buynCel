@@ -10,49 +10,16 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { connect } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import { logout } from '../store/auth';
-import Search from './Search';
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
+//thunks
+import { _searchTerm } from '../store/search';
 
 const styles = theme => ({
+  notMobile: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
+  },
   inputRoot: {
     color: 'inherit',
     width: '100%',
@@ -101,9 +68,13 @@ const styles = theme => ({
   grow: {
     flexGrow: 1,
   },
+
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   },
   left: {
     display: 'flex',
@@ -125,6 +96,7 @@ const styles = theme => ({
 class NavBar extends Component {
   state = {
     // anchorAccount: null,
+    searchTerm: '',
     left: false,
     right: false,
   };
@@ -134,6 +106,11 @@ class NavBar extends Component {
       [side]: open,
     });
   };
+  handleSearchChange = e => {
+    const searchTerm = e.target.value
+    this.props.search(searchTerm);
+    this.setState({ searchTerm });
+  }
   render() {
     const { classes, auth } = this.props;
     const { anchorEl, anchorAccount } = this.state;
@@ -209,6 +186,8 @@ class NavBar extends Component {
                   }}
                 /> */}
                 <InputBase
+                  value={this.state.searchTerm}
+                  onChange={this.handleSearchChange}
                   placeholder="Search…"
                   classes={{
                     root: classes.inputRoot,
@@ -245,6 +224,7 @@ const mapStateToProps = ({ auth }) => {
 };
 const mapDispatchToProps = (dispatch, { history }) => {
   return {
+    search: term => dispatch(_searchTerm(term)),
     logout: () => {
       dispatch(logout());
       history.push('/');
@@ -253,3 +233,46 @@ const mapDispatchToProps = (dispatch, { history }) => {
 }
 
 export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar)));
+
+
+
+
+const suggestions = [
+  { label: 'Afghanistan' },
+  { label: 'Aland Islands' },
+  { label: 'Albania' },
+  { label: 'Algeria' },
+  { label: 'American Samoa' },
+  { label: 'Andorra' },
+  { label: 'Angola' },
+  { label: 'Anguilla' },
+  { label: 'Antarctica' },
+  { label: 'Antigua and Barbuda' },
+  { label: 'Argentina' },
+  { label: 'Armenia' },
+  { label: 'Aruba' },
+  { label: 'Australia' },
+  { label: 'Austria' },
+  { label: 'Azerbaijan' },
+  { label: 'Bahamas' },
+  { label: 'Bahrain' },
+  { label: 'Bangladesh' },
+  { label: 'Barbados' },
+  { label: 'Belarus' },
+  { label: 'Belgium' },
+  { label: 'Belize' },
+  { label: 'Benin' },
+  { label: 'Bermuda' },
+  { label: 'Bhutan' },
+  { label: 'Bolivia, Plurinational State of' },
+  { label: 'Bonaire, Sint Eustatius and Saba' },
+  { label: 'Bosnia and Herzegovina' },
+  { label: 'Botswana' },
+  { label: 'Bouvet Island' },
+  { label: 'Brazil' },
+  { label: 'British Indian Ocean Territory' },
+  { label: 'Brunei Darussalam' },
+].map(suggestion => ({
+  value: suggestion.label,
+  label: suggestion.label,
+}));

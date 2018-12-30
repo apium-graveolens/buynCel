@@ -91,7 +91,7 @@ export const _addOrder = order => dispatch => (
 
 //Admin only 
 export const _editOrder = (id, editedOrder) => dispatch => (
-  axios.put(`/api/orders/${id}`, editedOrder)
+  axios.put(`/api/orders/${id}`, { ...editedOrder, status: 'ORDER' })
 
     //this is the simple version, where we just re-fetch all the orders after an update
     .then(() => dispatch(_loadOrders()))

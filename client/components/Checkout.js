@@ -1,222 +1,233 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {FormGroup, TextField, Button, Typography, Grid, Checkbox} from '@material-ui/core'
-import {Link} from 'react-router-dom'
-import {_loadLineItems} from '../store/lineItems'
-import {_editUser} from '../store/auth'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
+import { withStyles } from '@material-ui/core/styles';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { FormGroup, TextField, Grid, Checkbox } from '@material-ui/core'
+import { Link, withRouter } from 'react-router-dom'
+import ShippingInforForm from './ShippingInfoForm';
+import CheckoutForm from './CheckoutWrapper';
+import { CardElement, injectStripe } from 'react-stripe-elements';
+import axios from 'axios';
+import { css } from 'react-emotion';
+import { ClipLoader } from 'react-spinners';
 
+const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+`;
 
-class Checkout extends Component {
-    constructor(){
-        super()
-        this.state = {
-            address: {
-                name: '',
-                address: '',
-                city: '',
-                state: '',
-                zip: '',
-                save: false
-            },
-            payment: {
-                name: '',
-                number: '',
-                expDate: '',
-                cvc: '',
-                zip: '',
-                save: false
-            }
-        }
+const styles = theme => ({
+  root: {
+    width: '90%',
+  },
+  button: {
+    marginTop: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  resetContainer: {
+    padding: theme.spacing.unit * 3,
+  },
+  stepper: {
+    backgroundColor: 'none',
+  },
+  btnContainer: {
+    marginTop: 40,
+  }
+});
 
-        this.changeAddressInputs = this.changeAddressInputs.bind(this)
-        this.condenseAddress = this.condenseAddress.bind(this)
-        this.checkout = this.checkout.bind(this)
-    }
-
-    componentDidMount(){
-        this.initCart();
-    }
-
-    initCart(){
-        const { auth, order, loadCartLineItems } = this.props;
-        //if both user and order have been loaded
-        if (order) loadCartLineItems(auth.id, order.id);
-    }
-
-    changeAddressInputs(e){
-        let value = e.target.value
-        if(e.target.name === 'save') {
-            value = !this.state.address.save
-        }
-
-        const address = {...this.state.address}
-        address[e.target.name] = value
-
-        this.setState({ address })
-    }
-
-    changePaymentInputs(e){
-        const _payment = {...this.state.payment}
-        _payment[e.target.name] = e.target.value
-        
-        this.setState({
-            payment: _payment
-        })
-    }
-
-    //---CHECKOUT FUNCITONS---
-
-    checkout(){
-        if(this.state.address.save){
-            this.saveAddress()
-        }
-
-        console.log(this.props.auth);
-    }
-
-
-    saveAddress(){
-        const userId = this.props.auth.id
-        const savedAddress = this.condenseAddress()
-        this.props.editUser(userId, {savedAddress})
-    }
-
-
-    //---HELPER FUNCTIONS---
-    calculateTotal = lineItems => {
-        if (lineItems.length > 0) {
-            return lineItems.reduce((total, curr) => (
-            total + (curr.product.price * curr.quantity)
-            ), 0);
-        } else {
-            return 0;
-        }
-    };
-
-    formatTotal = total => '$' + total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-
-    condenseAddress = () => {
-        const array = Object.keys(this.state.address).map(line => this.state.address[line]);
-        array.pop();
-        return array.join('|')
-    }
-
-    expandAddress = (address) => {
-        const array = address.split('|')
-        const keys = Object.keys(this.state.address)
-        return array.reduce( (object, line, index) => {
-            object[keys[index]] = line
-            return object
-        },{})
-    }
-
-    //---END HELPER FUNCTIONS---
-
-    render(){
-        const {address, payment} = this.state;
-        const {lineItems} = this.props;
-        const totalAmount = this.formatTotal(this.calculateTotal(lineItems));
-        const totalCount = lineItems.length
-
-        return (
-            <div>
-            
-            <h1>Checkout</h1>
-
-            <Grid container direction={'row'}>
-            
-                <Grid item xs={4} container direction={'column'} alignItems={'center'}>
-
-                    <Grid item xs={6}>
-                        <Typography variant={'subtitle1'}>  1. Review Order Summary </Typography>
-                        <hr/>
-                    </Grid>
-
-                    <Grid item xs={6} container direction={'column'} alignItems={'center'}>
-                        <Typography>
-                            Amount: {totalAmount}
-                        </Typography>
-                        <Typography>
-                            Products: {totalCount}
-                        </Typography>
-                        <hr/>
-                        <Button
-                            to={'/cart'}
-                            component={Link}
-                        >
-                            View Cart
-                        </Button>
-
-                    </Grid>
-
-                </Grid>
-
-                <Grid item xs={4} container direction={'column'} alignItems={'center'}>
-
-                    <Grid item xs={6}>
-                        <Typography variant={'subtitle1'}>  2. Shipping Information </Typography>
-                        <hr/>
-                    </Grid>
-
-                    <Grid item xs={6} container direction={'row'} justify={'center'} alignItems={'center'}>
-                        <TextField label={'Recipient Name'} name={'name'} value={address.name} onChange={this.changeAddressInputs}/>
-                        <TextField label={'Address'} name={'address'} value={address.address} onChange={this.changeAddressInputs}/>
-                        <TextField label={'City'} name={'city'} value={address.city} onChange={this.changeAddressInputs}/>
-                        <TextField label={'State'} name={'state'} value={address.state} onChange={this.changeAddressInputs}/>
-                        <TextField label={'Zip Code'} name={'zip'} value={address.zip} onChange={this.changeAddressInputs}/>
-
-                        <Typography>Save Address?</Typography><Checkbox name={'save'} checked={address.save} onChange={this.changeAddressInputs}/>
-                    </Grid>
-
-
-                </Grid>
-
-                <Grid item xs={4} container direction={'column'} alignItems={'center'}>
-
-                    <Grid item xs={6}>
-                        <Typography variant={'subtitle1'}>  3. Payment Information </Typography>
-                        <hr/>
-                    </Grid>
-
-                    <Grid item xs={6} container direction={'row'} justify={'center'} alignItems={'stretch'}>
-                        <TextField label={'Cardholder Name'} />
-                        <TextField label={'Credit Card Number'}/>
-                        <TextField label={'Expiration Date'}/>
-                        <TextField label={'CVC'}/>
-                        <TextField label={'Zip Code'}/>
-                    </Grid>
-
-                    <Button
-                        onClick={()=>{
-                            this.checkout();
-                        }}
-                    
-                    >Complete Order
-                    </Button>
-
-                </Grid>
-
-            </Grid>
-
-
-            </div>
-        )
-        
-    }
+function getSteps() {
+  return ['Review order', 'Shipping Information', 'Payment Information'];
 }
 
+class Checkout extends React.Component {
+  state = {
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    loading: false,
+    activeStep: 0,
+
+  }
+  handleNext = () => {
+    this.setState(state => ({
+      activeStep: state.activeStep + 1,
+    }));
+  };
+
+  handleBack = () => {
+    this.setState(state => ({
+      activeStep: state.activeStep - 1,
+    }));
+  };
+
+  handleReset = () => {
+    this.setState({
+      activeStep: 0,
+    });
+  };
+  handlePaymentSubmit = async e => {
+    this.setState({ loading: true })
+    let { token } = await this.props.stripe.createToken({ name: "Name" });
+    axios.post('/api/stripe', {
+      token: token.id
+    })
+      .then(res => res.data)
+      .then(({ status }) => {
+        if (status === 'succeeded') {
+          this.setState({ loading: false })
+          //redirect to confirmation page
+          this.props.history.push('/confirmation')
+        } else {
+          console.log('status', status)
+        }
+      })
+  }
+
+  getStepContent = step => {
+    switch (step) {
+      case 0:
+        return (
+          <div>
+            <Typography>
+              {/* Amount: {totalAmount} */}
+              Amount: $41.99
+            </Typography>
+            <Typography>
+              {/* Products: {totalCount} */}
+              Products: 4
+            </Typography>
+          </div>
+        );
+      case 1:
+        return <ShippingInforForm />;
+      case 2:
+        return <CardElement />;
+      default:
+        return 'Unknown step';
+    }
+  }
+
+
+  render() {
+    const { lineItems } = this.props;
+    const { classes } = this.props;
+    const steps = getSteps();
+    const { activeStep } = this.state;
+
+    console.log('props', this.props)
+
+    return (
+      <Grid container justify="center">
+        <Grid item xs={12} md={5}>
+          <div className={classes.root}>
+            <Stepper id="stepper" activeStep={activeStep} orientation="vertical">
+              {steps.map((label, index) => {
+                return (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      <Typography>{this.getStepContent(index)}</Typography>
+                      <div className={classes.actionsContainer}>
+                        <div className={classes.btnContainer}>
+                          {activeStep === 0 ? (
+                            <Button
+                              to={'/cart'}
+                              component={Link}
+                              className={classes.button}
+                            >
+                              ← Cart
+                        </Button>
+                          ) : (
+                              <Button
+                                disabled={activeStep === 0}
+                                onClick={this.handleBack}
+                                className={classes.button}
+                              >
+                                Back
+                      </Button>
+                            )}
+
+                          {activeStep === 2 ? (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.handlePaymentSubmit}
+                              className={classes.button}
+                            >
+                              {this.state.loading ? (
+                                <ClipLoader
+                                  className={override}
+                                  sizeUnit={"px"}
+                                  size={13}
+                                  color={'#ffffff'}
+                                  loading={this.state.loading}
+                                />
+                              ) : (
+                                  'Finish'
+                                )}
+                            </Button>
+                          ) : (
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={this.handleNext}
+                                className={classes.button}
+                              >
+                                Next
+                          </Button>
+                            )}
+                        </div>
+                      </div>
+                    </StepContent>
+                  </Step>
+                );
+              })}
+            </Stepper>
+            {
+              activeStep === steps.length && (
+                <Paper square elevation={0} className={classes.resetContainer}>
+                  <Typography>All steps completed - you&apos;re finished</Typography>
+                  <Button onClick={this.handleReset} className={classes.button}>
+                    Reset
+            </Button>
+                </Paper>
+              )
+            }
+          </div >
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+Checkout.propTypes = {
+  classes: PropTypes.object,
+};
 
 const mapStateToProps = ({ orders, auth, lineItems }) => {
-    return {
-        order: orders.find(order => order.status == 'cart'),
-        auth,
-        lineItems
-    }
+  return {
+    order: orders.find(order => order.status == 'cart'),
+    auth,
+    lineItems
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
-    editUser: (userId, newUser) => dispatch(_editUser(userId,newUser))
+  loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
+  editUser: (userId, newUser) => dispatch(_editUser(userId, newUser))
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Checkout)
+export default withRouter(injectStripe(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout))));

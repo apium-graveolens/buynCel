@@ -9,3 +9,7 @@ a {
   text-decoration: none;
 }
 
+#stepper {
+  background-color: rgb(245,248,247) !important;
+}
+

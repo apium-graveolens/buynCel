@@ -11,7 +11,8 @@ import SignUp from './SignUp';
 import ProductDetail from './ProductDetail';
 import Login from './Login';
 import Cart from './Cart';
-import Checkout from './Checkout'
+import CheckoutWrapper from './CheckoutWrapper'
+import Confirmation from './Confirmation';
 import { _exchangeTokenForAuth } from '../store/auth';
 
 class Main extends Component {
@@ -32,7 +33,8 @@ class Main extends Component {
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/cart' component={Cart} />
-          <Route exact path='/checkout' component={Checkout} />
+          <Route exact path='/checkout' component={CheckoutWrapper} />
+          <Route exact path='/confirmation' component={Confirmation} />
         </div>
       </div>
     )

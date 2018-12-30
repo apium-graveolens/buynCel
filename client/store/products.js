@@ -4,7 +4,6 @@ import axios from 'axios';
 const LOAD_PRODUCTS = 'LOAD_PRODUCTS';
 const ADD_PROUDCT = 'ADD_PRODUCT';
 const DELETE_PRODUCT = 'DELETE_PRODUCT';
-
 //action creators
 export const loadProducts = products => ({
   type: LOAD_PRODUCTS,
@@ -20,20 +19,20 @@ export const deleteProduct = id => ({
 })
 
 //thunk creators | underscore(_) denotes a thunk
-export const _loadProducts = (categoryFilter,titleFilter) => dispatch => (
+export const _loadProducts = (categoryFilter, titleFilter) => dispatch => (
   axios.get('/api/products')
     .then(response => response.data)
     .then(products => {
       let _products = products
-      if(categoryFilter){
-        _products = products.filter( prod => {
-          return prod.categories.some( category => {
+      if (categoryFilter) {
+        _products = products.filter(prod => {
+          return prod.categories.some(category => {
             return categoryFilter.includes(category.id)
           })
         })
       }
-      if(titleFilter) {
-        _products = products.filter( prod => 
+      if (titleFilter) {
+        _products = products.filter(prod =>
           prod.title.toLowerCase().includes(titleFilter.toLowerCase())
         )
       }

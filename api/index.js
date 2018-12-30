@@ -10,7 +10,6 @@ router.use(express.json())
 //AUTH MIDDLEWARE
 router.use(async (req, res, next) => {
   const token = req.headers.authorization
-  console.log(req.headers)
   if (!token) {
     return next()
   }
@@ -23,6 +22,12 @@ router.use(async (req, res, next) => {
     next({ status: 401 })
   }
 })
+
+//SEARCH ROUTES
+router.use('/search', require('./search'))
+
+//STRIPE ROUTES
+router.use('/stripe', require('./stripe'))
 
 //AUTH ROUTES
 router.use('/auth', require('./auth'))

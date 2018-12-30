@@ -8,14 +8,14 @@ const checkAdmin = require('./checkAdmin')
 //AUTH ROUTES
 
 //Auth Middleware
-// router.use('/', async (req, res, next) => {
-//     if (!req.user) {
-//         console.log("No req.user");
-//         res.sendStatus(401)
-//     } else {
-//         next()
-//     }
-// })
+router.use('/', async (req, res, next) => {
+    if (!req.user) {
+        console.log("No req.user");
+        res.sendStatus(401)
+    } else {
+        next()
+    }
+})
 
 //Get all orders
 router.get('/', async (req, res, next) => {
