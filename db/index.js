@@ -48,21 +48,21 @@ const syncSeed = async () => {
                 quantity: 11,
                 photo: base64Images.rawCelery
             })
-            const rawCelery2 = await Product.create({
+            await Product.create({
                 title: 'Raw Celery2',
                 description: 'It is raw celery',
                 price: 100,
                 quantity: 11,
                 photo: base64Images.rawCelery
             })
-            const rawCelery3 = await Product.create({
+            await Product.create({
                 title: 'Raw Celery3',
                 description: 'It is raw celery',
                 price: 100,
                 quantity: 11,
                 photo: base64Images.rawCelery
             })
-            const rawCelery4 = await Product.create({
+            await Product.create({
                 title: 'Raw Celery3',
                 description: 'It is raw celery',
                 price: 100,
