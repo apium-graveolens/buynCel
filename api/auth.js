@@ -1,11 +1,8 @@
 const express = require('express')
 const router = express.Router()
-
 const axios = require('axios')
-
 const jwt = require('jwt-simple')
-
-const {User} = require('../db')
+const { User } = require('../db')
 
 //TOKEN AUTH ROUTES
 
@@ -18,20 +15,20 @@ router.post('/', async (req, res, next) => {
         password: req.body.password
       }
     })
-    if (!authUser){
+    if (!authUser) {
       return next({ status: 401 })
     }
-    const token = jwt.encode({id: authUser.id}, process.env.JWT_SECRET)
-    res.send({token})
+    const token = jwt.encode({ id: authUser.id }, process.env.JWT_SECRET)
+    res.send({ token })
   } catch (ex) {
-      next(ex)
+    next(ex)
   }
 })
-  
+
 //Send user their Id
 router.get('/', async (req, res, next) => {
-  if (!req.user){
-    return next({ status: 401})
+  if (!req.user) {
+    return next({ status: 401 })
   }
   res.send(req.user)
 })
@@ -59,22 +56,22 @@ router.get('/facebook/callback', async (req, res, next) => {
         email: facebookData.email
       }
     })
-    if (!user){
-      if (facebookData.email){
+    if (!user) {
+      if (facebookData.email) {
         user = User.create({
           email: facebookData.email,
           passowrd: '',
           isAdmin: false
         })
       } else {
-      return next(new Error('Facebook User Validation Failed.'))
+        return next(new Error('Facebook User Validation Failed.'))
       }
     }
-    const token = jwt.encode({id: user.id}, process.env.JWT_SECRET)
-    res.send({token})
+    const token = jwt.encode({ id: user.id }, process.env.JWT_SECRET)
+    res.send({ token })
   } catch (ex) {
-      next(ex)
-    }
+    next(ex)
+  }
 })
 
 module.exports = router

@@ -29,7 +29,8 @@ const styles = {
 class Login extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    error: false
   }
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -40,6 +41,7 @@ class Login extends Component {
   }
   render() {
     const { classes } = this.props;
+    const { error } = this.state;
     return (
       <Grid className={classes.viewContainer} container justify="center" alignItems="center">
         <Grid container justify="center" alignItems="center" item xs={6} md={4} lg={2} xlg={2}>
@@ -51,6 +53,7 @@ class Login extends Component {
               </Grid> */}
               <Grid item xs={12}>
                 <TextField
+                  error={error}
                   fullWidth
                   name="email"
                   value={this.state.email}
@@ -60,6 +63,7 @@ class Login extends Component {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={error}
                   fullWidth
                   name="password"
                   value={this.state.password}
@@ -88,8 +92,12 @@ class Login extends Component {
   }
 }
 
+const mapStateToProps = ({ auth }) => {
+
+}
+
 const mapDispatchToProps = (dispatch, { history }) => ({
-  login: user => dispatch(_login(user, history))
+  login: user => dispatch(_login(user, history)),
 });
 
 export default withStyles(styles)(connect(null, mapDispatchToProps)(Login));
