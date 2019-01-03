@@ -35,6 +35,7 @@ Product.searchTitle = async function (searchTerm) {
     })
     let searchArr = []
 
+    //TODO: figure out best practice for this. $like?
     totalArr.forEach(elem => {
         if (elem.title.toLowerCase().indexOf(searchTerm) !== -1 && elem.quantity > 0) {
             searchArr.push(elem)

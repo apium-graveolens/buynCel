@@ -10,20 +10,21 @@ app.use(express.static(path.join(__dirname, '.', 'public')))
 app.use('/api', require('./api'))
 
 db.syncSeed()
+  .then(() => console.log('SEED COMPLETE'))
 
 try {
-    Object.assign(process.env, require('./.env.js'))
-  } catch (ex) {
-    console.log(ex)
-  }
+  Object.assign(process.env, require('./.env.js'))
+} catch (ex) {
+  console.log(ex)
+}
 
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
-    console.log(`Now listening in on port ${PORT}`)
+  console.log(`Now listening in on port ${PORT}`)
 })
 
-app.use( (err, req, res, next) => {
-    console.log("Express is handling error: ", err)
-    res.status(err.status || 500).send({ error: err.message })
+app.use((err, req, res, next) => {
+  console.log("Express is handling error: ", err)
+  res.status(err.status || 500).send({ error: err.message })
 })

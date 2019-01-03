@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
 const db = require('../db')
-
 const checkAdmin = require('./checkAdmin')
 
 //UN-AUTH ROUTES
@@ -14,7 +12,16 @@ router.post('/', async (req, res, next) => {
         let newUser = await db.User.create({ ...userToCreate, isAdmin: false })
         res.send(newUser)
     } catch (ex) {
-        next(ex)
+        //if email is invalid
+        //TODO: figure out the conventional way to handle this error
+        if (ex.message == 'Validation error: Validation isEmail on email failed') {
+            ex = {
+                message: 'Invalid email'
+            }
+            res.status(403).send(ex);
+        } else {
+            next(ex);
+        }
     }
 })
 

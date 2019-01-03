@@ -1,3 +1,5 @@
+//TODO: Clean up this component. Maybe break down into pieces
+
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { ListItemIcon, Divider, List, ListItem, ListItemText, Drawer, Menu, MenuItem, Button, Grid, withStyles, IconButton, Typography, AppBar, Toolbar } from '@material-ui/core';
@@ -100,7 +102,6 @@ class NavBar extends Component {
     left: false,
     right: false,
   };
-
   toggleDrawer = (side, open) => () => {
     this.setState({
       [side]: open,
@@ -108,8 +109,11 @@ class NavBar extends Component {
   };
   handleSearchChange = e => {
     const searchTerm = e.target.value
-    this.props.search(searchTerm);
     this.setState({ searchTerm });
+  }
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.search(this.state.searchTerm);
   }
   render() {
     const { classes, auth } = this.props;
@@ -185,15 +189,17 @@ class NavBar extends Component {
                     input: classes.inputInput,
                   }}
                 /> */}
-                <InputBase
-                  value={this.state.searchTerm}
-                  onChange={this.handleSearchChange}
-                  placeholder="Search…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                />
+                <form onSubmit={this.handleSubmit}>
+                  <InputBase
+                    value={this.state.searchTerm}
+                    onChange={this.handleSearchChange}
+                    placeholder="Search…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                  />
+                </form>
               </div>
               <Grid item className={classes.account}>
                 {auth.id ? (
@@ -233,9 +239,6 @@ const mapDispatchToProps = (dispatch, { history }) => {
 }
 
 export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar)));
-
-
-
 
 const suggestions = [
   { label: 'Afghanistan' },

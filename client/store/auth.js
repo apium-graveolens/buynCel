@@ -1,13 +1,23 @@
 import axios from 'axios';
 import { _loadOrders } from './orders';
 
+const defaultState = {
+  user: {},
+  error: false
+};
+
 //action constants
 const SET_USER = 'SET_USER';
+const SET_ERROR = 'SET_ERROR';
 
 //action creators
 export const setUser = user => ({
   type: SET_USER,
   user
+});
+export const setError = error => ({
+  type: SET_ERROR,
+  error
 });
 
 //thunk creators
@@ -48,14 +58,16 @@ export const _login = (credentials, history) => dispatch => (
       dispatch(_exchangeTokenForAuth());
       history.push('/products')
     })
-    .catch(err => { throw err })
+    .catch(err => {
+      dispatch(setError(err))
+    })
 );
 
 export const _editUser = (userId, newUser) => dispatch => {
   axios.put(`/api/users/${userId}`, newUser)
-      .then(response => response.data)
-      .then( user => { dispatch(setUser(user)) } )
-      .catch( err => { throw err })
+    .then(response => response.data)
+    .then(user => { dispatch(setUser(user)) })
+    .catch(err => { throw err })
 }
 
 export const logout = () => dispatch => {
@@ -71,9 +83,18 @@ export const _createUser = (user, history) => dispatch => {
       //using full user object here rather than just email and pass credentials. not very semantic.
       dispatch(_login(user, history))
     })
+    .catch(err => {
+      alert('Invalid email address. Please try again.');
+    })
 }
 
-export default (state = {}, action) => {
-  if (action.type === SET_USER) return action.user;
-  else return state;
+export default (state = defaultState, action) => {
+  switch (action.type) {
+    case SET_ERROR:
+      return { ...state, error: action.error }
+    case SET_USER:
+      return { error: false, user: action.user };
+    default:
+      return state;
+  }
 };
