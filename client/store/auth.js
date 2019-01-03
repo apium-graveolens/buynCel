@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { _loadOrders } from './orders';
-import { stat } from 'fs';
 
 const defaultState = {
   user: {},
@@ -60,9 +59,7 @@ export const _login = (credentials, history) => dispatch => (
       history.push('/products')
     })
     .catch(err => {
-      console.log(err.status)
-      alert('Bad credentials');
-      dispatch(_setError(err))
+      dispatch(setError(err))
     })
 );
 

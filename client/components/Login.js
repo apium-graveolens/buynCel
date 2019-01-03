@@ -4,6 +4,7 @@ import { withStyles, Grid, TextField, Button, Typography } from '@material-ui/co
 import AccountBox from '@material-ui/icons/AccountBox';
 import { connect } from 'react-redux';
 import { _login } from '../store/auth';
+import ErrorSnackBar from './ErrorSnackBar';
 
 const styles = {
   viewContainer: {
@@ -30,7 +31,7 @@ class Login extends Component {
   state = {
     email: '',
     password: '',
-    error: false
+    snackBar: true
   }
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -39,9 +40,14 @@ class Login extends Component {
     e.preventDefault();
     this.props.login(this.state);
   }
+  handleSnackBarClose = () => {
+    console.log('CLOSING')
+    this.setState({ snackBar: false })
+  }
+
   render() {
     const { classes } = this.props;
-    const { error } = this.state;
+    const error = this.props.auth.error && this.state.snackBar;
     return (
       <Grid className={classes.viewContainer} container justify="center" alignItems="center">
         <Grid container justify="center" alignItems="center" item xs={6} md={4} lg={2} xlg={2}>
@@ -83,6 +89,7 @@ class Login extends Component {
                 <Typography className={classes.signUp}>
                   Don't have an account? <Link to="/signup">Sign Up!</Link>
                 </Typography>
+                <ErrorSnackBar open={error} handleClose={this.handleSnackBarClose} />
               </Grid>
             </form>
           </div>
@@ -92,12 +99,10 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => {
-
-}
+const mapStateToProps = ({ auth }) => ({ auth });
 
 const mapDispatchToProps = (dispatch, { history }) => ({
   login: user => dispatch(_login(user, history)),
 });
 
-export default withStyles(styles)(connect(null, mapDispatchToProps)(Login));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Login));
