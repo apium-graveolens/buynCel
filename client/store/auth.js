@@ -53,9 +53,9 @@ export const _login = (credentials, history) => dispatch => (
 
 export const _editUser = (userId, newUser) => dispatch => {
   axios.put(`/api/users/${userId}`, newUser)
-      .then(response => response.data)
-      .then( user => { dispatch(setUser(user)) } )
-      .catch( err => { throw err })
+    .then(response => response.data)
+    .then(user => { dispatch(setUser(user)) })
+    .catch(err => { throw err })
 }
 
 export const logout = () => dispatch => {
@@ -70,6 +70,9 @@ export const _createUser = (user, history) => dispatch => {
     .then(user => {
       //using full user object here rather than just email and pass credentials. not very semantic.
       dispatch(_login(user, history))
+    })
+    .catch(err => {
+      alert('Invalid email address. Please try again.');
     })
 }
 
