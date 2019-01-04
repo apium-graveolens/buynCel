@@ -29,6 +29,7 @@ class Main extends Component {
         <Route exact path='/' component={Home} />
         <div style={styles}>
           <Route exact path='/products' component={ProductList} />
+          <Route exact path='/search' component={ProductList} />
           <Route exact path='/products/:id' component={ProductDetail} />
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
