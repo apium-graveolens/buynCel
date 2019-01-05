@@ -1,4 +1,4 @@
-//TODO: Clean up this component. Maybe break down into pieces
+//done TODO: Clean up this component. Maybe break down into pieces
 
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
@@ -10,13 +10,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '../store/auth';
 import { connect } from 'react-redux';
 import SearchBar from './SearchBar';
+import UserButton from './UserButton';
 
 //thunks
 import { _searchTerm } from '../store/search';
 
 const styles = theme => ({
   notMobile: {
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
   },
@@ -61,10 +62,13 @@ class NavBar extends Component {
       [side]: open,
     });
   };
+  handleToggle = () => {
+    this.setState(state => ({ right: !state.right }));
+  };
   render() {
-    const { classes, auth } = this.props;
+    const { classes, auth, logout } = this.props;
     const { anchorEl, anchorAccount } = this.state;
-    const open = Boolean(anchorEl);
+    const menuOpen = this.state.right;
     const accountOpen = Boolean(anchorAccount);
     const isHome = this.props.location.pathname == '/';
 
@@ -126,11 +130,54 @@ class NavBar extends Component {
               </Grid>
               <div className={classes.grow}></div>
               <SearchBar />
+              <Button
+                className={classes.notMobile}
+                component={Link}
+                to="/cart"
+              >
+                Cart
+                  </Button>
+              <Button
+                className={classes.notMobile}
+                component={Link}
+                to="/products"
+              >
+                Products
+                  </Button>
               <Grid item className={classes.account}>
-                {auth.id ? (
-                  <IconButton onClick={this.handleAccountMenu} >
-                    <AccountCircle fontSize="large" />
-                  </IconButton>
+                {auth.user.id ? (
+                  <UserButton />
+                  // <Fragment>
+                  //   <IconButton
+                  //     buttonRef={node => {
+                  //       this.anchorEl = node;
+                  //     }}
+                  //     aria-owns={open ? 'menu-list-grow' : undefined}
+                  //     aria-haspopup="true"
+                  //     onClick={this.handleToggle}
+                  //   >
+                  //     <AccountCircle fontSize="large" />
+                  //   </IconButton>
+                  //   <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
+                  //     {({ TransitionProps, placement }) => (
+                  //       <Grow
+                  //         {...TransitionProps}
+                  //         id="menu-list-grow"
+                  //         style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                  //       >
+                  //         <Paper>
+                  //           <ClickAwayListener onClickAway={this.handleClose}>
+                  //             <MenuList>
+                  //               <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  //               <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  //               <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                  //             </MenuList>
+                  //           </ClickAwayListener>
+                  //         </Paper>
+                  //       </Grow>
+                  //     )}
+                  //   </Popper>
+                  // </Fragment>
                 ) : (
                     <Button
                       component={Link}
