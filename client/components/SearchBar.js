@@ -1,94 +1,99 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 import { connect } from 'react-redux';
-import Select from 'react-select';
-import { _loadProducts } from '../store/products'
+import { withRouter } from 'react-router-dom';
+import { _searchTerm } from '../store/search';
+
+const styles = theme => ({
+    search: {
+        height: 30,
+        display: 'flex',
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginTop: 27,
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing.unit,
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing.unit * 9,
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+        width: '100%',
+    },
+    inputInput: {
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 10,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: 120,
+            '&:focus': {
+                width: 200,
+            },
+        },
+    },
+});
 
 class SearchBar extends Component {
-    constructor() {
-        super()
-        this.state = {
-            categoryFilters: [],
-            titleFilter: '',
-            mode: 'categories'
-        }
-        this.setCategoryFilter = this.setCategoryFilter.bind(this)
-        this.setTitleFilter = this.setTitleFilter.bind(this)
-        this.resetFilter = this.resetFilter.bind(this)
+    state = {
+        searchTerm: ''
     }
-
-    setCategoryFilter(categoryFilters) {
-        if (categoryFilters.length == 0) return this.resetFilter();
-        this.setState({ categoryFilters }, () => {
-            const filters = this.state.categoryFilters.map(c => c.value)
-            this.props.reloadProducts(filters, null)
-        })
+    handleSearchChange = e => {
+        const searchTerm = e.target.value
+        this.setState({ searchTerm });
     }
-
-    setTitleFilter(e) {
-        if (titleFilters.length == 0) return this.resetFilter();
-        this.setState({ titleFilter: e.target.value })
-        this.props.reloadProducts(null, this.state.titleFilter)
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.search(this.state.searchTerm);
+        this.props.history.push('/search');
     }
-
-    resetFilter() {
-        console.log('worked?')
-        this.setState({
-            categoryFilters: [],
-            titleFilter: ''
-        })
-        this.props.reloadProducts();
-    }
-
-    switchMode(mode) {
-        this.setState({
-            categoryFilter: [],
-            titleFilter: '',
-            mode
-        })
-    }
-
-    render() {
-        const { categories } = this.props;
-        const { categoryFilters, titleFilter, mode } = this.state
-
+    render = () => {
+        const { classes } = this.props;
         return (
-            <div>
-                {mode == 'categories' ?
-                    <Select
-                        placeholder={'Select Categories'}
-                        isMulti={true}
-                        value={categoryFilters}
-                        onChange={this.setCategoryFilter}
-                        options={categories}
-                    /> :
-                    <input
-                        value={titleFilter}
-                        onChange={this.setTitleFilter}
+            <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon />
+                </div>
+                <form onSubmit={this.handleSubmit}>
+                    <InputBase
+                        value={this.state.searchTerm}
+                        onChange={this.handleSearchChange}
+                        placeholder="Search…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
                     />
-                }
-                {/* <button onClick={() => { this.switchMode('categories') }}>Search by Category</button>
-                <button onClick={() => { this.switchMode('titles') }}>Search by Product</button>
-                <button onClick={() => { this.resetFilter() }}>Clear Filters</button> */}
+                </form>
             </div>
         )
     }
-}
+};
 
-const mapStateToProps = ({ categories }) => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        categories: categories.map(cat => ({
-            value: cat.id,
-            label: cat.name
-        }))
+        search: term => dispatch(_searchTerm(term)),
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        reloadProducts: (categoryFilter, titleFilter) => {
-            dispatch(_loadProducts(categoryFilter, titleFilter))
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)
+export default withRouter(connect(null, mapDispatchToProps)(withStyles(styles)(SearchBar)));
