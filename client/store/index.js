@@ -7,6 +7,7 @@ import products from './products';
 import auth from './auth';
 import orders from './orders';
 import categories from './categories'
+import search from './search'
 
 //combine all slices of state
 const reducer = combineReducers({
@@ -15,7 +16,8 @@ const reducer = combineReducers({
   products,
   auth,
   orders,
-  categories
+  categories,
+  search,
 });
 
 //export the created store, with thunk and logger middleware applied
