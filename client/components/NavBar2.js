@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+import { logout } from '../store/auth';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,8 +17,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import SearchBar from './SearchBar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
+import ListIcon from '@material-ui/icons/ListAlt';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 
@@ -143,18 +145,21 @@ class PrimarySearchAppBar extends React.Component {
     const renderMobileMenu = (
       <Menu
         anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
+        <MenuItem
+          component={Link}
+          to="/products"
+        >
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              <MailIcon />
+              <ListIcon />
             </Badge>
           </IconButton>
-          <p>Messages</p>
+          <p>Products</p>
         </MenuItem>
         <MenuItem>
           <IconButton color="inherit">
@@ -162,14 +167,39 @@ class PrimarySearchAppBar extends React.Component {
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
-          <p>Notifications</p>
+          <p>Cart</p>
         </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
+        {
+          auth.user.id ? (
+            <Fragment>
+              <MenuItem onClick={this.handleProfileMenuOpen}>
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Profile</p>
+              </MenuItem>
+              <MenuItem
+                onClick={this.props.logout}
+              >
+                <IconButton color="inherit">
+                  <ExitIcon />
+                </IconButton>
+                <p>Logout</p>
+              </MenuItem>
+            </Fragment>
+          )
+            :
+            (
+              <MenuItem
+                component={Link}
+                to="/login">
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Login</p>
+              </MenuItem>
+            )
+        }
       </Menu>
     );
 
@@ -188,7 +218,7 @@ class PrimarySearchAppBar extends React.Component {
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
+                  <ListIcon />
                 </Badge>
               </IconButton>
               <IconButton color="inherit">
