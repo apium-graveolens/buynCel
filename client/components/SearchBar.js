@@ -17,7 +17,6 @@ const styles = theme => ({
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-        marginTop: 27,
         marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
