@@ -17,7 +17,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import SearchBar from './SearchBar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 
@@ -159,7 +159,7 @@ class PrimarySearchAppBar extends React.Component {
         <MenuItem>
           <IconButton color="inherit">
             <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
+              <ShoppingCartIcon />
             </Badge>
           </IconButton>
           <p>Notifications</p>
@@ -184,18 +184,6 @@ class PrimarySearchAppBar extends React.Component {
               Celery
             </Typography>
             <SearchBar />
-            {/* <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div> */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
@@ -205,7 +193,7 @@ class PrimarySearchAppBar extends React.Component {
               </IconButton>
               <IconButton color="inherit">
                 <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
+                  <ShoppingCartIcon />
                 </Badge>
               </IconButton>
               {auth.user.id ? (
