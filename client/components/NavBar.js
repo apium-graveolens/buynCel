@@ -1,4 +1,4 @@
-//TODO: Clean up this component. Maybe break down into pieces
+//done TODO: Clean up this component. Maybe break down into pieces
 
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
@@ -7,67 +7,22 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ListAlt from '@material-ui/icons/ListAlt';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
-import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { connect } from 'react-redux';
-import SearchIcon from '@material-ui/icons/Search';
 import { logout } from '../store/auth';
+import { connect } from 'react-redux';
+import SearchBar from './SearchBar';
+import UserButton from './UserButton';
 
 //thunks
 import { _searchTerm } from '../store/search';
 
 const styles = theme => ({
   notMobile: {
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
   },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200,
-      },
-    },
-  },
   root: {
     flexGrow: 1,
-  },
-  search: {
-    height: 30,
-    display: 'flex',
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginTop: 27,
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   grow: {
     flexGrow: 1,
@@ -99,8 +54,6 @@ const styles = theme => ({
 
 class NavBar extends Component {
   state = {
-    // anchorAccount: null,
-    searchTerm: '',
     left: false,
     right: false,
   };
@@ -109,19 +62,13 @@ class NavBar extends Component {
       [side]: open,
     });
   };
-  handleSearchChange = e => {
-    const searchTerm = e.target.value
-    this.setState({ searchTerm });
-  }
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.search(this.state.searchTerm);
-    this.props.history.push('/search');
-  }
+  handleToggle = () => {
+    this.setState(state => ({ right: !state.right }));
+  };
   render() {
-    const { classes, auth } = this.props;
+    const { classes, auth, logout } = this.props;
     const { anchorEl, anchorAccount } = this.state;
-    const open = Boolean(anchorEl);
+    const menuOpen = this.state.right;
     const accountOpen = Boolean(anchorAccount);
     const isHome = this.props.location.pathname == '/';
 
@@ -182,33 +129,55 @@ class NavBar extends Component {
                 )}
               </Grid>
               <div className={classes.grow}></div>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                {/* <Search
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                /> */}
-                <form onSubmit={this.handleSubmit}>
-                  <InputBase
-                    value={this.state.searchTerm}
-                    onChange={this.handleSearchChange}
-                    placeholder="Search…"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                  />
-                </form>
-              </div>
+              <SearchBar />
+              <Button
+                className={classes.notMobile}
+                component={Link}
+                to="/cart"
+              >
+                Cart
+                  </Button>
+              <Button
+                className={classes.notMobile}
+                component={Link}
+                to="/products"
+              >
+                Products
+                  </Button>
               <Grid item className={classes.account}>
-                {auth.id ? (
-                  <IconButton onClick={this.handleAccountMenu} >
-                    <AccountCircle fontSize="large" />
-                  </IconButton>
+                {auth.user.id ? (
+                  <UserButton />
+                  // <Fragment>
+                  //   <IconButton
+                  //     buttonRef={node => {
+                  //       this.anchorEl = node;
+                  //     }}
+                  //     aria-owns={open ? 'menu-list-grow' : undefined}
+                  //     aria-haspopup="true"
+                  //     onClick={this.handleToggle}
+                  //   >
+                  //     <AccountCircle fontSize="large" />
+                  //   </IconButton>
+                  //   <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
+                  //     {({ TransitionProps, placement }) => (
+                  //       <Grow
+                  //         {...TransitionProps}
+                  //         id="menu-list-grow"
+                  //         style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                  //       >
+                  //         <Paper>
+                  //           <ClickAwayListener onClickAway={this.handleClose}>
+                  //             <MenuList>
+                  //               <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  //               <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  //               <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                  //             </MenuList>
+                  //           </ClickAwayListener>
+                  //         </Paper>
+                  //       </Grow>
+                  //     )}
+                  //   </Popper>
+                  // </Fragment>
                 ) : (
                     <Button
                       component={Link}
@@ -233,7 +202,6 @@ const mapStateToProps = ({ auth }) => {
 };
 const mapDispatchToProps = (dispatch, { history }) => {
   return {
-    search: term => dispatch(_searchTerm(term)),
     logout: () => {
       dispatch(logout());
       history.push('/');
@@ -242,43 +210,3 @@ const mapDispatchToProps = (dispatch, { history }) => {
 }
 
 export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar)));
-
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
