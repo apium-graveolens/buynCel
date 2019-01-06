@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
+import { logout } from '../store/auth';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,10 +15,13 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import SearchBar from './SearchBar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import ListIcon from '@material-ui/icons/ListAlt';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   root: {
@@ -119,7 +125,7 @@ class PrimarySearchAppBar extends React.Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes } = this.props;
+    const { classes, auth, logout } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -139,33 +145,61 @@ class PrimarySearchAppBar extends React.Component {
     const renderMobileMenu = (
       <Menu
         anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
+        <MenuItem
+          component={Link}
+          to="/products"
+        >
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              <MailIcon />
+              <ListIcon />
             </Badge>
           </IconButton>
-          <p>Messages</p>
+          <p>Products</p>
         </MenuItem>
         <MenuItem>
           <IconButton color="inherit">
             <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
+              <ShoppingCartIcon />
             </Badge>
           </IconButton>
-          <p>Notifications</p>
+          <p>Cart</p>
         </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
+        {
+          auth.user.id ? (
+            <Fragment>
+              <MenuItem onClick={this.handleProfileMenuOpen}>
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Profile</p>
+              </MenuItem>
+              <MenuItem
+                onClick={this.props.logout}
+              >
+                <IconButton color="inherit">
+                  <ExitIcon />
+                </IconButton>
+                <p>Logout</p>
+              </MenuItem>
+            </Fragment>
+          )
+            :
+            (
+              <MenuItem
+                component={Link}
+                to="/login">
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Login</p>
+              </MenuItem>
+            )
+        }
       </Menu>
     );
 
@@ -173,44 +207,43 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+            {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               Celery
             </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
+            <SearchBar />
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
+                  <ListIcon />
                 </Badge>
               </IconButton>
               <IconButton color="inherit">
                 <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
+                  <ShoppingCartIcon />
                 </Badge>
               </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              {auth.user.id ? (
+                <IconButton
+                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              )
+                :
+                <Button
+                  component={Link}
+                  to="/login"
+                >
+                  Login
+                  </Button>
+              }
             </div>
             <div className={classes.sectionMobile}>
               <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
@@ -230,4 +263,18 @@ PrimarySearchAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PrimarySearchAppBar);
+const mapStateToProps = ({ auth }) => {
+  return {
+    auth
+  }
+};
+const mapDispatchToProps = (dispatch, { history }) => {
+  return {
+    logout: () => {
+      dispatch(logout());
+      history.push('/');
+    }
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(PrimarySearchAppBar)));

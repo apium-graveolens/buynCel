@@ -35,7 +35,7 @@ class Home extends Component {
               Celery
             </Typography>
             <Typography className={classes.subTitle} variant='body1'>
-              We fresh
+              ...jk it's a leek.
             </Typography>
           </Grid>
         </Grid>
