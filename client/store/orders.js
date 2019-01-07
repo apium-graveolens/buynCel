@@ -13,6 +13,7 @@ const ADD_ORDER = 'ADD_ORDER';
 const DELETE_ORDER = 'DELETE_ORDER';
 
 //action creators
+//TODO: change this to be 'setOrders' to follow convention
 export const loadOrders = orders => ({
   type: LOAD_ORDERS,
   orders

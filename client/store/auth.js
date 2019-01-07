@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { _loadOrders } from './orders';
+import { _loadOrders, loadOrders } from './orders';
 
 const defaultState = {
   user: {},
@@ -73,6 +73,7 @@ export const _editUser = (userId, newUser) => dispatch => {
 export const logout = () => dispatch => {
   window.localStorage.clear();
   dispatch(setUser({}));
+  dispatch(loadOrders({}))
 }
 
 export const _createUser = (user, history) => dispatch => {
