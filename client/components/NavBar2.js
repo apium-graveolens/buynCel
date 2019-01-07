@@ -123,9 +123,14 @@ class PrimarySearchAppBar extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  logout = () => {
+    this.handleMobileMenuClose();
+    this.props.logout();
+  }
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, auth, logout } = this.props;
+    const { classes, auth } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -158,20 +163,27 @@ class PrimarySearchAppBar extends React.Component {
         onClose={this.handleMobileMenuClose}
       >
         <MenuItem
+          onClick={this.handleMobileMenuClose}
           component={Link}
           to="/products"
         >
           <IconButton
             color="inherit"
             component={Link}
-            to="/login"
+            to="/products"
           >
             <ListIcon />
           </IconButton>
           <p>Products</p>
         </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit">
+        <MenuItem
+          onClick={this.handleMobileMenuClose}
+          component={Link}
+          to="/cart"
+        >
+          <IconButton
+            color="inherit"
+          >
             <Badge badgeContent={11} color="secondary">
               <ShoppingCartIcon />
             </Badge>
@@ -181,14 +193,18 @@ class PrimarySearchAppBar extends React.Component {
         {
           auth.user.id ? (
             <Fragment>
-              <MenuItem onClick={this.handleProfileMenuOpen}>
+              <MenuItem
+                onClick={this.handleMobileMenuClose}
+                component={Link}
+                to="/account" //TODO: setup /account view
+              >
                 <IconButton color="inherit">
                   <AccountCircle />
                 </IconButton>
-                <p>Profile</p>
+                <p>Account</p>
               </MenuItem>
               <MenuItem
-                onClick={this.props.logout}
+                onClick={this.logout}
               >
                 <IconButton color="inherit">
                   <ExitIcon />
@@ -225,10 +241,18 @@ class PrimarySearchAppBar extends React.Component {
             <SearchBar />
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                component={Link}
+                to="/products"
+              >
                 <ListIcon />
               </IconButton>
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                component={Link}
+                to="/cart"
+              >
                 <Badge badgeContent={17} color="secondary">
                   <ShoppingCartIcon />
                 </Badge>
