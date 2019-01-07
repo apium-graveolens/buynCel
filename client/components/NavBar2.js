@@ -126,13 +126,16 @@ class PrimarySearchAppBar extends React.Component {
   logout = () => {
     this.handleMobileMenuClose();
     this.props.logout();
-  }
+  };
 
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, auth } = this.props;
+    const { classes, auth, cart } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    //get number of different items currently in cart
+    let numItems = cart ? cart.lineItems.length : 0;
 
     const renderMenu = (
       <Menu
@@ -184,7 +187,7 @@ class PrimarySearchAppBar extends React.Component {
           <IconButton
             color="inherit"
           >
-            <Badge badgeContent={11} color="secondary">
+            <Badge badgeContent={numItems} color="secondary">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
@@ -253,7 +256,7 @@ class PrimarySearchAppBar extends React.Component {
                 component={Link}
                 to="/cart"
               >
-                <Badge badgeContent={17} color="secondary">
+                <Badge badgeContent={numItems} color="secondary">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
@@ -294,9 +297,12 @@ PrimarySearchAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, orders }) => {
+  const cart = orders.find(order => order.status === 'cart');
+  console.log('cart', cart)
   return {
-    auth
+    auth,
+    cart,
   }
 };
 const mapDispatchToProps = (dispatch, { history }) => {
