@@ -137,8 +137,15 @@ class PrimarySearchAppBar extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
         <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+        <MenuItem
+          onClick={this.props.logout}
+        >
+          <IconButton color="inherit">
+            <ExitIcon />
+          </IconButton>
+          <p>Logout</p>
+        </MenuItem>
       </Menu>
     );
 
@@ -154,10 +161,12 @@ class PrimarySearchAppBar extends React.Component {
           component={Link}
           to="/products"
         >
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <ListIcon />
-            </Badge>
+          <IconButton
+            color="inherit"
+            component={Link}
+            to="/login"
+          >
+            <ListIcon />
           </IconButton>
           <p>Products</p>
         </MenuItem>
@@ -217,9 +226,7 @@ class PrimarySearchAppBar extends React.Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <ListIcon />
-                </Badge>
+                <ListIcon />
               </IconButton>
               <IconButton color="inherit">
                 <Badge badgeContent={17} color="secondary">

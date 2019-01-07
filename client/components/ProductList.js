@@ -19,7 +19,7 @@ class ProductList extends Component {
                 key={product.id}
                 product={product}
                 order={order}
-                user={auth}
+                user={auth.user}
               />
             ))
               :

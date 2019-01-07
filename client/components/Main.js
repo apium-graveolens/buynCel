@@ -47,7 +47,6 @@ const mapDispatchToProps = dispatch => ({
   init: () => {
     dispatch(_loadProducts())
     dispatch(_loadCategories())
-    // dispatch(_loadOrders())
     dispatch(_exchangeTokenForAuth())
   }
 });
