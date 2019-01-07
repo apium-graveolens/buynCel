@@ -6,7 +6,10 @@ import { connect } from 'react-redux';
 const styles = {
   img: {
     width: '100%'
-  }
+  },
+  reviewContainer: {
+    height: '30vh'
+  },
 };
 
 const ProductDetail = ({ product, classes }) => {
@@ -44,7 +47,7 @@ const ProductDetail = ({ product, classes }) => {
         </div>
 
       </Grid>
-      <Grid item xs={9}>
+      <Grid className={classes.reviewContainer} item xs={9}>
         <ReviewList product={product} />
       </Grid>
     </Grid>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withStyles, Grid, TextField, Button, MenuItem, Select } from '@material-ui/core';
+import { withStyles, Grid, TextField, Button, MenuItem, Select, Typography } from '@material-ui/core';
 import { _createReview } from '../store/reviews';
 
 const styles = {
@@ -39,7 +39,7 @@ class ReviewForm extends Component {
     const { classes } = this.props;
     if (this.props.auth) {
       if (!this.props.auth.id) {
-        return <p>Please Login to leave a review</p>
+        return <Typography>Please Login to leave a review</Typography>
       } else {
         return (
           <form className={classes.form} onSubmit={this.handleSubmit}>
