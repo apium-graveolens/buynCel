@@ -5,7 +5,6 @@ import { _loadProducts } from '../store/products';
 import { _loadCategories } from '../store/categories'
 import { _loadOrders } from '../store/orders'
 import NavBar from './NavBar';
-import NavBar2 from './NavBar2';
 import Home from './Home';
 import ProductList from './ProductList';
 import SignUp from './SignUp';
@@ -26,7 +25,7 @@ class Main extends Component {
     }
     return (
       <div>
-        <NavBar2 />
+        <NavBar />
         <Route exact path='/' component={Home} />
         <div style={styles}>
           <Route exact path='/products' component={ProductList} />
