@@ -30,6 +30,9 @@ class Main extends Component {
         <div style={styles}>
           <Route exact path='/products' component={ProductList} />
           <Route exact path='/search' component={ProductList} />
+
+          {/* TODO: come up with a better pathname */}
+          <Route exact path='/categories/:category' component={ProductList} />
           <Route exact path='/products/:id' component={ProductDetail} />
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
