@@ -1,6 +1,6 @@
 import React from 'react';
 import ReviewList from './ReviewList';
-import { withStyles, Grid, Button, Typography } from '@material-ui/core';
+import { withStyles, Chip, Grid, Button, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 const styles = {
@@ -13,7 +13,7 @@ const styles = {
 };
 
 const ProductDetail = ({ product, classes }) => {
-  const { title, description, price, photo } = product;
+  const { title, description, price, photo, categories } = product;
   return (
     //TODO: add spacing/padding to grid items
     <Grid container justify="center">
@@ -28,6 +28,11 @@ const ProductDetail = ({ product, classes }) => {
         <hr />
         <p>{description}</p>
         <p>${price}</p>
+
+        {categories && categories.map(category => (
+          <Chip key={category.id} label={category.name} />
+        ))}
+
         <hr />
         <h4>Add to cart</h4>
 
@@ -47,7 +52,7 @@ const ProductDetail = ({ product, classes }) => {
         </div>
 
       </Grid>
-      <Grid className={classes.reviewContainer} item xs={9}>
+      <Grid className={classes.reviewContainer} item xs={12}>
         <ReviewList product={product} />
       </Grid>
     </Grid>

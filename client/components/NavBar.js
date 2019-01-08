@@ -135,7 +135,6 @@ class PrimarySearchAppBar extends React.Component {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     //get number of different items currently in cart
-    console.log('cart', cart);
     let numItems = typeof cart !== 'undefined' ? cart.lineItems.length : 0;
 
     const renderMenu = (
@@ -306,7 +305,6 @@ PrimarySearchAppBar.propTypes = {
 
 const mapStateToProps = ({ auth, orders }) => {
   const cart = orders.find(order => order.status === 'cart');
-  console.log('cart', cart)
   return {
     auth,
     cart,
