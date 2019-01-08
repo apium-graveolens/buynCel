@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { Chip, Card, CardContent, CardActions, CardActionArea, CardMedia, Typography, Button, withStyles, Grid } from '@material-ui/core';
+import CategoryChip from './CategoryChip';
 
 const styles = {
   card: {
@@ -51,7 +52,7 @@ class ProductSingle extends Component {
             </Typography>
           </CardContent>
           {product.categories.map(category => (
-            <Chip className={classes.chip} key={category.name} label={category.name} />
+            <CategoryChip category={category} />
           ))}
           <CardActions>
             <Button onClick={this.handleClick} value="plus" size="small" color="primary">

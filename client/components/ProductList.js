@@ -8,6 +8,7 @@ class ProductList extends Component {
     const { auth, order, search, products, match } = this.props;
     const { path, params } = match;
     const { category } = params;
+    let isCategorySearch;
 
     //determine which products need to be loaded
     let productsToList = [];
@@ -18,11 +19,15 @@ class ProductList extends Component {
       productsToList = products.filter(product => {
         return product.categories.filter(cat => cat.name === category).length > 0;
       })
+      isCategorySearch = true;
     }
 
     return (
       <div>
         <Grid container justify="center">
+          {isCategorySearch && (
+            <Typography>Category: {category}</Typography>
+          )}
           <Grid container justify="center" item xs={12} md={9}>
             {productsToList.length > 0 ? productsToList.map(product => (
               <ProductSingle
