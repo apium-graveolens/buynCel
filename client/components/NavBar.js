@@ -1,203 +1,313 @@
-//done TODO: Clean up this component. Maybe break down into pieces
-
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { ListItemIcon, Divider, List, ListItem, ListItemText, Drawer, Menu, MenuItem, Button, Grid, withStyles, IconButton, Typography, AppBar, Toolbar } from '@material-ui/core';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import ListAlt from '@material-ui/icons/ListAlt';
-import ShoppingCart from '@material-ui/icons/ShoppingCart';
-import MenuIcon from '@material-ui/icons/Menu';
-import { logout } from '../store/auth';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
+import { logout } from '../store/auth';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import { withStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 import SearchBar from './SearchBar';
-import UserButton from './UserButton';
-
-//thunks
-import { _searchTerm } from '../store/search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import ListIcon from '@material-ui/icons/ListAlt';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ExitIcon from '@material-ui/icons/ExitToApp';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
-  notMobile: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
   root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
-  },
-  left: {
-    display: 'flex',
+    width: '100%',
   },
   appBar: {
     position: 'absolute',
     top: 0,
     background: 'transparent',
-    boxShadow: 'none'
+    boxShadow: 'none',
+    color: 'black'
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
   },
   title: {
-    marginTop: '18px',
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
   },
-  account: {
-    marginTop: '13px',
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing.unit * 2,
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit * 3,
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
+    },
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
 });
 
-class NavBar extends Component {
+class PrimarySearchAppBar extends React.Component {
   state = {
-    left: false,
-    right: false,
+    anchorEl: null,
+    mobileMoreAnchorEl: null,
   };
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open,
-    });
-  };
-  handleToggle = () => {
-    this.setState(state => ({ right: !state.right }));
-  };
-  render() {
-    const { classes, auth, logout } = this.props;
-    const { anchorEl, anchorAccount } = this.state;
-    const menuOpen = this.state.right;
-    const accountOpen = Boolean(anchorAccount);
-    const isHome = this.props.location.pathname == '/';
 
-    const leftMenu = (
-      <List>
-        <ListItem button component={Link} to="/products">
-          <ListItemIcon><ListAlt /></ListItemIcon>
-          <ListItemText primary='Products' />
-        </ListItem>
-        <ListItem button component={Link} to="/cart">
-          <ListItemIcon><ShoppingCart /></ListItemIcon>
-          <ListItemText primary='Cart' />
-        </ListItem>
-        <Divider />
-        {auth.id ? (
-          <ListItem buttonon onClick={this.props.logout}>
-            <ListItemIcon><AccountCircle /></ListItemIcon>
-            <ListItemText primary='Logout' />
-          </ListItem>
-        ) : (
-            ''
-          )}
-      </List>
-    )
+  handleProfileMenuOpen = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+    this.handleMobileMenuClose();
+  };
+
+  handleMobileMenuOpen = event => {
+    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
+
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
+  };
+
+  logout = () => {
+    this.handleMobileMenuClose();
+    this.props.logout();
+  };
+
+  render() {
+    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const { classes, auth, cart } = this.props;
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    //get number of different items currently in cart
+    let numItems = typeof cart !== 'undefined' ? cart.lineItems.length : 0;
+
+    const renderMenu = (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMenuOpen}
+        onClose={this.handleMenuClose}
+      >
+        <MenuItem
+          onClick={this.handleMenuClose}
+          component={Link}
+          to='/account'
+        >
+          Account
+        </MenuItem>
+        <MenuItem
+          onClick={this.props.logout}
+        >
+          {/* <IconButton color="inherit">
+            <ExitIcon />
+          </IconButton> */}
+          Logout
+        </MenuItem>
+      </Menu>
+    );
+
+    const renderMobileMenu = (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMobileMenuOpen}
+        onClose={this.handleMobileMenuClose}
+      >
+        <MenuItem
+          onClick={this.handleMobileMenuClose}
+          component={Link}
+          to="/products"
+        >
+          <IconButton
+            color="inherit"
+            component={Link}
+            to="/products"
+          >
+            <ListIcon />
+          </IconButton>
+          <p>Products</p>
+        </MenuItem>
+        <MenuItem
+          onClick={this.handleMobileMenuClose}
+          component={Link}
+          to="/cart"
+        >
+          <IconButton
+            color="inherit"
+          >
+            <Badge badgeContent={numItems} color="secondary">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+          <p>Cart</p>
+        </MenuItem>
+        {
+          auth.user.id ? (
+            <Fragment>
+              <MenuItem
+                onClick={this.handleMobileMenuClose}
+                component={Link}
+                to="/account" //TODO: setup /account view
+              >
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Account</p>
+              </MenuItem>
+              <MenuItem
+                onClick={this.logout}
+              >
+                <IconButton color="inherit">
+                  <ExitIcon />
+                </IconButton>
+                <p>Logout</p>
+              </MenuItem>
+            </Fragment>
+          )
+            :
+            (
+              <MenuItem
+                component={Link}
+                to="/login">
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Login</p>
+              </MenuItem>
+            )
+        }
+      </Menu>
+    );
+
     return (
       <div className={classes.root}>
-        <AppBar className={classes.appBar} position="static" color="default">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
-            <Grid
-              justify="space-between"
-              container
-              spacing={24}
-            >
-              <Grid item className={classes.left}>
-                <IconButton
-                  className={classes.menuButton}
-                  color="inherit" aria-label="Menu"
-                  onClick={this.toggleDrawer('left', true)}
-                >
-                  <MenuIcon
-                    fontSize="large"
-                  />
-                </IconButton>
-                <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
-                  <div
-                    tabIndex={0}
-                    role="button"
-                    onClick={this.toggleDrawer('left', false)}
-                    onKeyDown={this.toggleDrawer('left', false)}
-                  >
-                    {leftMenu}
-                  </div>
-                </Drawer>
-                {!isHome && (
-                  <Typography className={classes.title} variant="h6" color="inherit" to='/' component={Link}>
-                    Celery
-                  </Typography>
-                )}
-              </Grid>
-              <div className={classes.grow}></div>
-              <SearchBar />
-              <Button
-                className={classes.notMobile}
-                component={Link}
-                to="/cart"
-              >
-                Cart
-                  </Button>
-              <Button
-                className={classes.notMobile}
+            {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+              <MenuIcon />
+            </IconButton> */}
+            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+              Celery
+            </Typography>
+            <SearchBar />
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                color="inherit"
                 component={Link}
                 to="/products"
               >
-                Products
+                <ListIcon />
+              </IconButton>
+              <IconButton
+                color="inherit"
+                component={Link}
+                to="/cart"
+              >
+                <Badge badgeContent={numItems} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+              {auth.user.id ? (
+                <IconButton
+                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              )
+                :
+                <Button
+                  component={Link}
+                  to="/login"
+                >
+                  Login
                   </Button>
-              <Grid item className={classes.account}>
-                {auth.user.id ? (
-                  <UserButton />
-                  // <Fragment>
-                  //   <IconButton
-                  //     buttonRef={node => {
-                  //       this.anchorEl = node;
-                  //     }}
-                  //     aria-owns={open ? 'menu-list-grow' : undefined}
-                  //     aria-haspopup="true"
-                  //     onClick={this.handleToggle}
-                  //   >
-                  //     <AccountCircle fontSize="large" />
-                  //   </IconButton>
-                  //   <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
-                  //     {({ TransitionProps, placement }) => (
-                  //       <Grow
-                  //         {...TransitionProps}
-                  //         id="menu-list-grow"
-                  //         style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                  //       >
-                  //         <Paper>
-                  //           <ClickAwayListener onClickAway={this.handleClose}>
-                  //             <MenuList>
-                  //               <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  //               <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                  //               <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-                  //             </MenuList>
-                  //           </ClickAwayListener>
-                  //         </Paper>
-                  //       </Grow>
-                  //     )}
-                  //   </Popper>
-                  // </Fragment>
-                ) : (
-                    <Button
-                      component={Link}
-                      to="/login"
-                    >
-                      Login
-                  </Button>
-                  )}
-              </Grid>
-            </Grid>
+              }
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                <MoreIcon />
+              </IconButton>
+            </div>
           </Toolbar>
         </AppBar>
+        {renderMenu}
+        {renderMobileMenu}
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = ({ auth }) => {
+PrimarySearchAppBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = ({ auth, orders }) => {
+  const cart = orders.find(order => order.status === 'cart');
   return {
-    auth
+    auth,
+    cart,
   }
 };
 const mapDispatchToProps = (dispatch, { history }) => {
@@ -209,4 +319,4 @@ const mapDispatchToProps = (dispatch, { history }) => {
   }
 }
 
-export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(PrimarySearchAppBar)));

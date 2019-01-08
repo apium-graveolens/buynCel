@@ -1,26 +1,44 @@
 import React from 'react';
 import ReviewList from './ReviewList';
-import { Grid, Button, Typography } from '@material-ui/core';
+import { withStyles, Chip, Grid, Button, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 
-const ProductDetail = ({ product }) => {
-  const { title, description, price, photo } = product;
+const styles = {
+  img: {
+    width: '100%'
+  },
+  reviewContainer: {
+    height: '30vh'
+  },
+};
+
+const ProductDetail = ({ product, classes }) => {
+  const { title, description, price, photo, categories } = product;
   return (
+    //TODO: add spacing/padding to grid items
     <Grid container justify="center">
-      <Grid item xs={12} lg={3}>
-        <img src={photo} />
+      <Grid item xs={10} sm={5} md={4} lg={3}>
+        <img
+          className={classes.img}
+          src={photo}
+        />
       </Grid>
-      <Grid item xs={12} lg={3}>
+      <Grid item xs={10} sm={5} md={4} lg={3}>
         <h3>{title}</h3>
         <hr />
         <p>{description}</p>
         <p>${price}</p>
+
+        {categories && categories.map(category => (
+          <Chip key={category.id} label={category.name} />
+        ))}
+
         <hr />
         <h4>Add to cart</h4>
-        
+
         <div>
           <Button value="plus" size="small" color="primary">
-                +
+            +
           </Button>
           <Typography>
             0
@@ -32,9 +50,9 @@ const ProductDetail = ({ product }) => {
             -
           </Button>
         </div>
-        
+
       </Grid>
-      <Grid item xs={9}>
+      <Grid className={classes.reviewContainer} item xs={12}>
         <ReviewList product={product} />
       </Grid>
     </Grid>
@@ -48,4 +66,4 @@ const mapStateToProps = ({ products }, { match }) => {
   }
 }
 
-export default connect(mapStateToProps)(ProductDetail);
+export default withStyles(styles)(connect(mapStateToProps)(ProductDetail));

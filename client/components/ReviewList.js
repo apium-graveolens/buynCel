@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Divider, Tab, TabContainer } from '@material-ui/core';
+import { withStyles, Divider, Tab, TabContainer, Typography } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import { _fetchReviews } from '../store/reviews';
 import { connect } from 'react-redux';
@@ -30,11 +30,15 @@ class ReviewList extends Component {
           <Tab value="two" label="Leave a review" />
         </Tabs>
         <Divider />
-        {value === 'one' &&
-          reviews.map(review => (
-            <Review key={review.id} review={review} />
-          ))
-        }
+        {value === 'one' && (
+          reviews.length > 0 ? (
+            reviews.map(review => (
+              <Review key={review.id} review={review} />
+            ))
+          )
+            :
+            <Typography>No reviews yet...</Typography>
+        )}
         {value === 'two' && <ReviewForm resetTab={this.resetTab} auth={auth} product={this.props.product} />}
       </div>
     )

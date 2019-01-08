@@ -5,21 +5,36 @@ import { Grid, Typography } from '@material-ui/core';
 
 class ProductList extends Component {
   render() {
-    const { auth, order, search, products } = this.props;
+    const { auth, order, search, products, match } = this.props;
+    const { path, params } = match;
+    const { category } = params;
+    let isCategorySearch;
 
-    //check if page is product list or search list
-    const isOnSearchPage = this.props.match.path === '/search';
-    const searchOrAllProducts = isOnSearchPage ? search.suggestions : products;
+    //determine which products need to be loaded
+    let productsToList = [];
+    if (path === '/search') productsToList = search.suggestions;
+    else if (path === '/products') productsToList = products;
+    //else, on category search page
+    else {
+      productsToList = products.filter(product => {
+        return product.categories.filter(cat => cat.name === category).length > 0;
+      })
+      isCategorySearch = true;
+    }
+
     return (
       <div>
         <Grid container justify="center">
+          {isCategorySearch && (
+            <Typography>Category: {category}</Typography>
+          )}
           <Grid container justify="center" item xs={12} md={9}>
-            {searchOrAllProducts.length > 0 ? searchOrAllProducts.map(product => (
+            {productsToList.length > 0 ? productsToList.map(product => (
               <ProductSingle
                 key={product.id}
                 product={product}
                 order={order}
-                user={auth}
+                user={auth.user}
               />
             ))
               :

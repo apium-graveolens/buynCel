@@ -77,11 +77,23 @@ router.get('/user/:id', async (req, res, next) => {
             }
         })
         if (ordersByUser.length == 0) {
-            const firstOrder = await db.Order.create({
+            // const firstOrder = await db.Order.create({
+            //     status: 'cart',
+            //     userId: req.params.id
+            // });
+            // ordersByUser = [firstOrder]
+
+            await db.Order.create({
                 status: 'cart',
                 userId: req.params.id
             });
-            ordersByUser = [firstOrder]
+            ordersByUser = await db.Order.findAll({
+                include: [db.LineItem],
+                where: {
+                    userId: req.params.id
+                }
+            })
+
         }
         res.send(ordersByUser)
     } catch (ex) {
