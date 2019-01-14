@@ -20,9 +20,16 @@ router.get('/:term', (req, res, next) => {
   //   .catch(next);
 
   const { term } = req.params;
-  Product.searchTitle(term)
-    .then(productMatches => res.send(productMatches))
-    .catch(next);
+  if (term.length === 0) {
+    console.log('resetting search')
+    Product.findAll()
+      .then(products => res.send(products))
+      .catch(next)
+  } else {
+    Product.searchTitle(term)
+      .then(productMatches => res.send(productMatches))
+      .catch(next);
+  }
 });
 
 module.exports = router;
