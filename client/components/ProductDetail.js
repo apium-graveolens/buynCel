@@ -2,6 +2,7 @@ import React from 'react';
 import ReviewList from './ReviewList';
 import { withStyles, Chip, Grid, Button, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
+import CategoryChip from './CategoryChip';
 
 const styles = {
   img: {
@@ -24,13 +25,13 @@ const ProductDetail = ({ product, classes }) => {
         />
       </Grid>
       <Grid item xs={10} sm={5} md={4} lg={3}>
-        <h3>{title}</h3>
+        <Typography variant="title">{title}</Typography>
         <hr />
-        <p>{description}</p>
-        <p>${price}</p>
+        <Typography>{description}</Typography>
+        <Typography>${price}</Typography>
 
         {categories && categories.map(category => (
-          <Chip key={category.id} label={category.name} />
+          <CategoryChip key={category.id} category={category} />
         ))}
 
         <hr />
