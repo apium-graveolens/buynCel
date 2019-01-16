@@ -5,7 +5,8 @@ import { _createReview } from '../store/reviews';
 
 const styles = {
   container: {
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: 100,
   },
   form: {
     width: '100%'
@@ -64,6 +65,9 @@ class ReviewForm extends Component {
               <Grid item xs={8}>
                 <TextField
                   fullWidth
+                  multiline={true}
+                  rows={7}
+                  variant="filled"
                   name="content"
                   label="Be honest..."
                   value={this.state.content}
