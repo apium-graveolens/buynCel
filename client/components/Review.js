@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const styles = {
   container: {
-    padding: 50,
+    padding: 20,
     margin: 50,
   }
 }

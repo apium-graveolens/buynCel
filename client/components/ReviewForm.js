@@ -37,8 +37,8 @@ class ReviewForm extends Component {
   }
   render() {
     const { classes } = this.props;
-    if (this.props.auth) {
-      if (!this.props.auth.id) {
+    if (this.props.auth.user) {
+      if (!this.props.auth.user.id) {
         return <Typography>Please Login to leave a review</Typography>
       } else {
         return (

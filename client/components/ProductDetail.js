@@ -16,7 +16,7 @@ const ProductDetail = ({ product, classes }) => {
   const { title, description, price, photo, categories } = product;
   return (
     //TODO: add spacing/padding to grid items
-    <Grid container justify="center">
+    <Grid spacing={40} container justify="center">
       <Grid item xs={10} sm={5} md={4} lg={3}>
         <img
           className={classes.img}
@@ -52,8 +52,10 @@ const ProductDetail = ({ product, classes }) => {
         </div>
 
       </Grid>
-      <Grid className={classes.reviewContainer} item xs={12}>
-        <ReviewList product={product} />
+      <Grid justify="center" container className={classes.reviewContainer} item xs={12}>
+        <Grid item xs={11} lg={8}>
+          <ReviewList product={product} />
+        </Grid>
       </Grid>
     </Grid>
   )
