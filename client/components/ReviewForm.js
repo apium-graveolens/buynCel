@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { withStyles, Grid, TextField, Button, MenuItem, Select, Typography } from '@material-ui/core';
 import { _createReview } from '../store/reviews';
 
@@ -17,6 +18,10 @@ const styles = {
   rating: {
     marginLeft: 85,
     marginBottom: 30
+  },
+  notLoggedIn: {
+    marginTop: 30,
+    textAlign: 'center'
   }
 }
 
@@ -40,7 +45,11 @@ class ReviewForm extends Component {
     const { classes } = this.props;
     if (this.props.auth.user) {
       if (!this.props.auth.user.id) {
-        return <Typography>Please Login to leave a review</Typography>
+        return (
+          <div className={classes.notLoggedIn}>
+            <Typography>Please <Link to="/login">Login</Link> to leave a review</Typography>
+          </div>
+        )
       } else {
         return (
           <form className={classes.form} onSubmit={this.handleSubmit}>

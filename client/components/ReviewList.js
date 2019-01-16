@@ -7,6 +7,10 @@ import Review from './Review';
 import ReviewForm from './ReviewForm';
 
 const styles = {
+  notLoggedIn: {
+    marginTop: 30,
+    textAlign: 'center'
+  }
 }
 
 class ReviewList extends Component {
@@ -22,7 +26,7 @@ class ReviewList extends Component {
   resetTab = () => this.setState({ value: 'one' });
   render() {
     const { value } = this.state;
-    const { auth, reviews } = this.props;
+    const { classes, auth, reviews } = this.props;
     return (
       <div>
         <Tabs value={value} onChange={this.handleChange}>
@@ -36,8 +40,11 @@ class ReviewList extends Component {
               <Review key={review.id} review={review} />
             ))
           )
-            :
-            <Typography>No reviews yet...</Typography>
+            : (
+              <div className={classes.notLoggedIn}>
+                <Typography>Be the first to leave a review!</Typography>
+              </div>
+            )
         )}
         {value === 'two' && <ReviewForm resetTab={this.resetTab} auth={auth} product={this.props.product} />}
       </div>
