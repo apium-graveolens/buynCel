@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { withStyles, Grid, TextField, Button, MenuItem, Select, Typography } from '@material-ui/core';
 import { _createReview } from '../store/reviews';
 
 const styles = {
   container: {
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: 100,
   },
   form: {
     width: '100%'
@@ -16,6 +18,10 @@ const styles = {
   rating: {
     marginLeft: 85,
     marginBottom: 30
+  },
+  notLoggedIn: {
+    marginTop: 30,
+    textAlign: 'center'
   }
 }
 
@@ -37,9 +43,13 @@ class ReviewForm extends Component {
   }
   render() {
     const { classes } = this.props;
-    if (this.props.auth) {
-      if (!this.props.auth.id) {
-        return <Typography>Please Login to leave a review</Typography>
+    if (this.props.auth.user) {
+      if (!this.props.auth.user.id) {
+        return (
+          <div className={classes.notLoggedIn}>
+            <Typography>Please <Link to="/login">Login</Link> to leave a review</Typography>
+          </div>
+        )
       } else {
         return (
           <form className={classes.form} onSubmit={this.handleSubmit}>
@@ -64,6 +74,9 @@ class ReviewForm extends Component {
               <Grid item xs={8}>
                 <TextField
                   fullWidth
+                  multiline={true}
+                  rows={7}
+                  variant="filled"
                   name="content"
                   label="Be honest..."
                   value={this.state.content}

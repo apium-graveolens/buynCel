@@ -47,6 +47,7 @@ class ProductList extends Component {
 }
 
 const mapStateToProps = ({ auth, products, orders, search }) => {
+  orders = orders ? orders : []
   return {
     search,
     auth,
