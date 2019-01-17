@@ -24,6 +24,9 @@ const styles = theme => ({
     width: 3,
     padding: 8,
   },
+  productImg: {
+    width: 50
+  },
 });
 
 class SignUp extends Component {
@@ -56,6 +59,7 @@ class SignUp extends Component {
   }
   render() {
     const { classes, lineItems } = this.props;
+    console.log()
     return (
       <Grid container justify="center">
         <Grid item xs={9} lg={7}>
@@ -74,7 +78,10 @@ class SignUp extends Component {
                 return (
                   <TableRow key={item.id}>
                     <TableCell component="th" scope="item">
-                      {item.product.title}
+                      <img
+                        className={classes.productImg}
+                        src={item.product.photo}
+                      />
                     </TableCell>
                     <TableCell numeric>
                       <Button onClick={() => this.handleClickUp('+', item)} className={classes.button}>↑</Button>

@@ -26,7 +26,7 @@ class ProductDetail extends React.Component {
     const order = orders.find(order => order.status === 'cart');
     create(order.id, product.id, auth.user.id)
       .then(thing => {
-        console.log(thing);
+        console.log('thing:', thing);
         history.push('/cart');
       });
 
