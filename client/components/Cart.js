@@ -38,7 +38,7 @@ class SignUp extends Component {
     const { auth, order, loadCartLineItems } = this.props;
     //if both user and order have been loaded
     console.log("ORDER", order)
-    if (order) loadCartLineItems(auth.id, order.id);
+    if (order) loadCartLineItems(auth.user.id, order.id);
   }
   handleClickUp = (direction, lineItem) => {
     const { create, update, remove, auth, order } = this.props;

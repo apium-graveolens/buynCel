@@ -110,9 +110,10 @@ class Checkout extends React.Component {
   handlePaymentSubmit = async e => {
     this.setState({ loading: true })
     let { token } = await this.props.stripe.createToken({ name: "Name" });
-    console.log('token', token);
+    const total = calculateTotal(this.props.lineItems);
     axios.post('/api/stripe', {
-      token: token.id
+      token: token.id,
+      amount: total,
     })
       .then(res => res.data)
       .then(({ status }) => {
@@ -128,8 +129,9 @@ class Checkout extends React.Component {
       })
       .catch(err => {
         this.setState({ loading: false })
-        alert('stripe failed. check console')
-        console.log('err', err)
+        //TODO: better error handling
+        alert('There was an error with your card number. Please try again.')
+        throw err;
       })
   }
 
