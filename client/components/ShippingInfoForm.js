@@ -4,30 +4,6 @@ import { Typography, FormGroup, TextField, Grid, Checkbox } from '@material-ui/c
 import { _editOrder } from '../store/orders';
 
 class ShippingInforForm extends Component {
-  // state = {
-  //   name: null,
-  //   address: null,
-  //   addressCity: null,
-  //   addressState: null,
-  //   addressZip: null,
-  //   save: false
-  // }
-
-  // componentDidMount() {
-  //   //if currently logged in user has saved shipping information, set state to that information
-  //   const { auth } = this.props;
-  //   if (auth.user.id) {
-  //     const { name, addressCity, addressState, addressZip, address } = auth.user;
-  //     this.setState({
-  //       name,
-  //       addressCity,
-  //       addressState,
-  //       addressZip,
-  //       address
-  //     })
-  //   }
-  // }
-
   render() {
     const { shippingInfo, handleShippingInfoChange } = this.props;
     const { name, address, addressCity, addressState, addressZip, save } = shippingInfo;
