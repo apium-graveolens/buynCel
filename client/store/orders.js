@@ -91,11 +91,12 @@ export const _addOrder = order => dispatch => (
 );
 
 //Admin only 
-export const _editOrder = (id, editedOrder) => dispatch => (
-  axios.put(`/api/orders/${id}`, { ...editedOrder, status: 'ORDER' })
+//TODO: this should not hard code 'completed' status
+export const _editOrder = (id, editedOrder, userId) => dispatch => (
+  axios.put(`/api/orders/${id}`, { ...editedOrder, status: 'completed' }, tokenHeader)
 
     //this is the simple version, where we just re-fetch all the orders after an update
-    .then(() => dispatch(_loadOrders()))
+    .then(() => dispatch(_loadOrders(userId)))
     .catch(err => { throw err })
 );
 export const _deleteOrder = id => dispatch => (

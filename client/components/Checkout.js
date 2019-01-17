@@ -12,13 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core'
 import { Link, withRouter } from 'react-router-dom'
 import ShippingInforForm from './ShippingInfoForm';
-import CheckoutForm from './CheckoutWrapper';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import axios from 'axios';
 import { css } from 'react-emotion';
 import { ClipLoader } from 'react-spinners';
-import { format } from 'util';
 import { formatTotal, calculateTotal } from '../util';
+import { _editOrder } from '../store/orders';
 
 const override = css`
     display: block;
@@ -97,9 +96,13 @@ class Checkout extends React.Component {
   handleShippingInfoChange = e => {
     this.setState({
       shippingInfo: {
+        //TODO: might be a 'better' way to do this
+        ...this.state.shippingInfo,
         [e.target.name]: e.target.value
       }
     })
+
+    console.log('shippingInfoState:', this.state)
     // this.props.editOrder(this.props.cart.id, this.state)
   }
   handleReset = () => {
@@ -109,6 +112,7 @@ class Checkout extends React.Component {
   };
   handlePaymentSubmit = async e => {
     this.setState({ loading: true })
+    const { editOrder, order, auth } = this.props;
     let { token } = await this.props.stripe.createToken({ name: "Name" });
     const total = calculateTotal(this.props.lineItems);
     axios.post('/api/stripe', {
@@ -119,6 +123,13 @@ class Checkout extends React.Component {
       .then(({ status }) => {
         if (status === 'succeeded') {
           this.setState({ loading: false })
+          //update order
+          console.log('shippingInfo: ', this.state.shippingInfo)
+          console.log('order.id: ', order.id)
+          console.log('user.id', auth.user.id);
+          editOrder(order.id, this.state.shippingInfo, auth.user.id);
+          //send confirmation email
+          alert('send confirmation email')
           //redirect to confirmation page
           this.props.history.push('/confirmation')
         } else {
@@ -161,15 +172,11 @@ class Checkout extends React.Component {
         return 'Unknown step';
     }
   }
-
-
   render() {
     const { lineItems } = this.props;
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-
-    console.log('props', this.props)
 
     return (
       <Grid container justify="center">
@@ -266,10 +273,10 @@ const mapStateToProps = ({ orders, auth, lineItems }) => {
     lineItems
   }
 }
-
 const mapDispatchToProps = dispatch => ({
   loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
-  editUser: (userId, newUser) => dispatch(_editUser(userId, newUser))
+  editUser: (userId, newUser) => dispatch(_editUser(userId, newUser)),
+  editOrder: (orderId, editedOrder, userId) => dispatch(_editOrder(orderId, editedOrder, userId)),
 });
 
 export default withRouter(injectStripe(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout))));
