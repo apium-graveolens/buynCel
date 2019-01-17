@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { _loadLineItems } from '../store/lineItems';
+import { calculateTotal, formatTotal } from '../util';
 
 const styles = theme => ({
   root: {
@@ -24,6 +25,9 @@ const styles = theme => ({
     width: 3,
     padding: 8,
   },
+  productImg: {
+    width: 50
+  },
 });
 
 class SignUp extends Component {
@@ -34,28 +38,19 @@ class SignUp extends Component {
     const { auth, order, loadCartLineItems } = this.props;
     //if both user and order have been loaded
     console.log("ORDER", order)
-    if (order) loadCartLineItems(auth.id, order.id);
+    if (order) loadCartLineItems(auth.user.id, order.id);
   }
   handleClickUp = (direction, lineItem) => {
     const { create, update, remove, auth, order } = this.props;
     update(lineItem, direction, auth.id, order.id)
   }
-  calculateTotal = lineItems => {
-    if (lineItems.length > 0) {
-      return lineItems.reduce((total, curr) => (
-        total + (curr.product.price * curr.quantity)
-      ), 0);
-    } else {
-      return 0;
-    }
-  }
-  formatTotal = total => '$' + total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   removeItem = item => {
     const { order, auth } = this.props;
     this.props.remove(item, auth.id, order.id);
   }
   render() {
     const { classes, lineItems } = this.props;
+    console.log()
     return (
       <Grid container justify="center">
         <Grid item xs={9} lg={7}>
@@ -74,7 +69,10 @@ class SignUp extends Component {
                 return (
                   <TableRow key={item.id}>
                     <TableCell component="th" scope="item">
-                      {item.product.title}
+                      <img
+                        className={classes.productImg}
+                        src={item.product.photo}
+                      />
                     </TableCell>
                     <TableCell numeric>
                       <Button onClick={() => this.handleClickUp('+', item)} className={classes.button}>↑</Button>
@@ -101,7 +99,7 @@ class SignUp extends Component {
           <Grid container justify="flex-end">
             <Grid item xs={3} className={classes.total}>
               <Typography variant="h6">
-                Total: {this.formatTotal(this.calculateTotal(lineItems))}
+                Total: {formatTotal(calculateTotal(lineItems))}
               </Typography>
             </Grid>
           </Grid>

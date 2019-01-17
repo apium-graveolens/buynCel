@@ -9,14 +9,15 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { FormGroup, TextField, Grid, Checkbox } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { Link, withRouter } from 'react-router-dom'
 import ShippingInforForm from './ShippingInfoForm';
-import CheckoutForm from './CheckoutWrapper';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import axios from 'axios';
 import { css } from 'react-emotion';
 import { ClipLoader } from 'react-spinners';
+import { formatTotal, calculateTotal } from '../util';
+import { _editOrder } from '../store/orders';
 
 const override = css`
     display: block;
@@ -52,14 +53,33 @@ function getSteps() {
 
 class Checkout extends React.Component {
   state = {
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
+    shippingInfo: {
+      name: null,
+      address: null,
+      addressCity: null,
+      addressState: null,
+      addressZip: null,
+      save: false,
+    },
     loading: false,
     activeStep: 0,
+  }
+  componentDidMount() {
+    //if currently logged in user has saved shipping information, set state to that information
+    const { auth } = this.props;
+    if (auth.user.id) {
+      const { name, addressCity, addressState, addressZip, address } = auth.user;
+      this.setState({
+        shippingInfo: {
+          name,
+          addressCity,
+          addressState,
+          addressZip,
+          address
 
+        }
+      })
+    }
   }
   handleNext = () => {
     this.setState(state => ({
@@ -73,6 +93,18 @@ class Checkout extends React.Component {
     }));
   };
 
+  handleShippingInfoChange = e => {
+    this.setState({
+      shippingInfo: {
+        //TODO: might be a 'better' way to do this
+        ...this.state.shippingInfo,
+        [e.target.name]: e.target.value
+      }
+    })
+
+    console.log('shippingInfoState:', this.state)
+    // this.props.editOrder(this.props.cart.id, this.state)
+  }
   handleReset = () => {
     this.setState({
       activeStep: 0,
@@ -80,54 +112,71 @@ class Checkout extends React.Component {
   };
   handlePaymentSubmit = async e => {
     this.setState({ loading: true })
+    const { editOrder, order, auth } = this.props;
     let { token } = await this.props.stripe.createToken({ name: "Name" });
+    const total = calculateTotal(this.props.lineItems);
     axios.post('/api/stripe', {
-      token: token.id
+      token: token.id,
+      amount: total,
     })
       .then(res => res.data)
       .then(({ status }) => {
         if (status === 'succeeded') {
           this.setState({ loading: false })
+          //update order
+          console.log('shippingInfo: ', this.state.shippingInfo)
+          console.log('order.id: ', order.id)
+          console.log('user.id', auth.user.id);
+          editOrder(order.id, this.state.shippingInfo, auth.user.id);
+          //send confirmation email
+          alert('send confirmation email')
           //redirect to confirmation page
           this.props.history.push('/confirmation')
         } else {
+          this.setState({ loading: false })
+          alert('stripe failed. check console')
           console.log('status', status)
         }
+      })
+      .catch(err => {
+        this.setState({ loading: false })
+        //TODO: better error handling
+        alert('There was an error with your card number. Please try again.')
+        throw err;
       })
   }
 
   getStepContent = step => {
+    const { lineItems } = this.props;
     switch (step) {
       case 0:
         return (
           <div>
             <Typography>
-              {/* Amount: {totalAmount} */}
-              Amount: $41.99
+              Total: {formatTotal(calculateTotal(lineItems))}
             </Typography>
             <Typography>
               {/* Products: {totalCount} */}
-              Products: 4
+              Products: {lineItems.length}
             </Typography>
           </div>
         );
       case 1:
-        return <ShippingInforForm />;
+        return <ShippingInforForm
+          shippingInfo={this.state.shippingInfo}
+          handleShippingInfoChange={this.handleShippingInfoChange}
+        />;
       case 2:
         return <CardElement />;
       default:
         return 'Unknown step';
     }
   }
-
-
   render() {
     const { lineItems } = this.props;
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-
-    console.log('props', this.props)
 
     return (
       <Grid container justify="center">
@@ -224,10 +273,10 @@ const mapStateToProps = ({ orders, auth, lineItems }) => {
     lineItems
   }
 }
-
 const mapDispatchToProps = dispatch => ({
   loadCartLineItems: (userId, cartId) => dispatch(_loadLineItems(userId, cartId)),
-  editUser: (userId, newUser) => dispatch(_editUser(userId, newUser))
+  editUser: (userId, newUser) => dispatch(_editUser(userId, newUser)),
+  editOrder: (orderId, editedOrder, userId) => dispatch(_editOrder(orderId, editedOrder, userId)),
 });
 
 export default withRouter(injectStripe(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout))));

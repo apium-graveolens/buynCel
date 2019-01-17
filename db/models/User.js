@@ -20,7 +20,16 @@ const User = conn.define('user', {
     type: Seq.BOOLEAN,
     defaultValue: false
   },
-  savedAddress: {
+  address: {
+    type: Seq.STRING
+  },
+  addressCity: {
+    type: Seq.STRING
+  },
+  addressState: {
+    type: Seq.STRING
+  },
+  addressZip: {
     type: Seq.STRING
   },
   savedPaymentMethod: {

@@ -5,7 +5,7 @@ import Checkout from './Checkout';
 class CheckoutWrapper extends Component {
   render() {
     return (
-      <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx">
+      <StripeProvider apiKey="pk_test_U7iQdEpUOAA2xXZxJtFZlwaj">
         <div className="example">
           <Elements>
             <Checkout />

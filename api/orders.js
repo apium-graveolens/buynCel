@@ -129,6 +129,14 @@ router.put('/:id', async (req, res, next) => {
         }
         let editedOrder = await db.Order.findById(req.params.id)
         await editedOrder.update(req.body)
+
+        //if completing a placed order,
+        //initialize a new 'cart' order
+        console.log('reqUser', reqUser)
+        await db.Order.create({
+            status: 'cart',
+            userId: reqUser
+        });
         res.send(editedOrder)
     } catch (ex) {
         next(ex)

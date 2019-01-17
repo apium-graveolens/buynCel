@@ -4,44 +4,27 @@ import { Typography, FormGroup, TextField, Grid, Checkbox } from '@material-ui/c
 import { _editOrder } from '../store/orders';
 
 class ShippingInforForm extends Component {
-  state = {
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
-    save: false
-  }
-
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-    // this.props.editOrder(this.props.cart.id, this.state)
-  }
-
-  handleSubmit = () => {
-    //TODO: update order with inputted shipping informationj
-  }
-
   render() {
-    const { name, address, city, state, zip, save } = this.state;
+    const { shippingInfo, handleShippingInfoChange } = this.props;
+    const { name, address, addressCity, addressState, addressZip, save } = shippingInfo;
     return (
       <div>
-        <TextField fullWidth label={'Recipient Name'} name={'name'} value={name} onChange={this.handleChange} />
-        <TextField fullWidth label={'Address'} name={'address'} value={address} onChange={this.handleChange} />
-        <TextField fullWidth label={'City'} name={'city'} value={city} onChange={this.handleChange} />
-        <TextField fullWidth label={'State'} name={'state'} value={state} onChange={this.handleChange} />
-        <TextField fullWidth label={'Zip Code'} name={'zip'} value={zip} onChange={this.handleChange} />
-        {/* <Typography>Save Address?</Typography> <Checkbox name={'save'} checked={save} onChange={this.handleChange} /> */}
+        <TextField fullWidth label={'Recipient Name'} name={'name'} value={name} onChange={handleShippingInfoChange} />
+        <TextField fullWidth label={'Address'} name={'address'} value={address} onChange={handleShippingInfoChange} />
+        <TextField fullWidth label={'City'} name={'addressCity'} value={addressCity} onChange={handleShippingInfoChange} />
+        <TextField fullWidth label={'State'} name={'addressState'} value={addressState} onChange={handleShippingInfoChange} />
+        <TextField fullWidth label={'Zip Code'} name={'addressZip'} value={addressZip} onChange={handleShippingInfoChange} />
+        {/* <Typography>Save Address?</Typography> <Checkbox name={'save'} checked={save} onChange={handleShippingInfoChange} /> */}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ orders }) => {
+const mapStateToProps = ({ orders, auth }) => {
   const cart = orders.find(order => order.status == 'cart')
-  console.log('cart', cart)
   return {
-    cart
+    cart,
+    auth
   }
 }
 
