@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { _loadLineItems } from '../store/lineItems';
+import { calculateTotal, formatTotal } from '../util';
 
 const styles = theme => ({
   root: {
@@ -43,16 +44,6 @@ class SignUp extends Component {
     const { create, update, remove, auth, order } = this.props;
     update(lineItem, direction, auth.id, order.id)
   }
-  calculateTotal = lineItems => {
-    if (lineItems.length > 0) {
-      return lineItems.reduce((total, curr) => (
-        total + (curr.product.price * curr.quantity)
-      ), 0);
-    } else {
-      return 0;
-    }
-  }
-  formatTotal = total => '$' + total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   removeItem = item => {
     const { order, auth } = this.props;
     this.props.remove(item, auth.id, order.id);
@@ -108,7 +99,7 @@ class SignUp extends Component {
           <Grid container justify="flex-end">
             <Grid item xs={3} className={classes.total}>
               <Typography variant="h6">
-                Total: {this.formatTotal(this.calculateTotal(lineItems))}
+                Total: {formatTotal(calculateTotal(lineItems))}
               </Typography>
             </Grid>
           </Grid>
