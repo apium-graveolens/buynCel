@@ -1,11 +1,9 @@
 const express = require('express')
 const app = express()
-
 const path = require('path')
+const db = require('./db')
 
-const db = require('./db/')
-
-app.use(express.static(path.join(__dirname, '.', 'public')))
+app.use(express.static(path.join(__dirname, '..', 'public')))
 
 app.use('/api', require('./api'))
 
@@ -13,7 +11,7 @@ db.syncSeed()
   .then(() => console.log('SEED COMPLETE'))
 
 try {
-  Object.assign(process.env, require('./.env.js'))
+  Object.assign(process.env, require('../.env.js'))
 } catch (ex) {
   console.log(ex)
 }
