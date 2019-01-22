@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { _createLineItem, _updateLineItem, _removeLineItem } from '../store/orders';
 import { Chip, Card, CardContent, CardActions, CardActionArea, CardMedia, Typography, Button, withStyles, Grid } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import CategoryChip from './CategoryChip';
 
 const styles = {
@@ -31,7 +32,7 @@ class ProductSingle extends Component {
     else update(lineItem, direction);
   }
   render() {
-    const { lineItem, classes, product } = this.props;
+    const { lineItem, classes, product, auth } = this.props;
     const quantity = lineItem ? lineItem.quantity : 0;
     return (
       <Grid item xs={12} lg={3} className={classes.container}>
@@ -52,24 +53,28 @@ class ProductSingle extends Component {
             </Typography>
           </CardContent>
           {product.categories.map(category => (
+            // <IconButton>
             <CategoryChip category={category} />
+            // </IconButton>
           ))}
-          <CardActions>
-            <Button onClick={this.handleClick} value="plus" size="small" color="primary">
-              +
+          {auth.user.id && (
+            <CardActions>
+              <Button onClick={this.handleClick} value="plus" size="small" color="primary">
+                +
           </Button>
-            <Typography>
-              {quantity}
-            </Typography>
-            <Button
-              disabled={quantity == 0}
-              onClick={this.handleClick}
-              value="minus" size="small"
-              color="primary"
-            >
-              -
+              <Typography>
+                {quantity}
+              </Typography>
+              <Button
+                disabled={quantity == 0}
+                onClick={this.handleClick}
+                value="minus" size="small"
+                color="primary"
+              >
+                -
           </Button>
-          </CardActions>
+            </CardActions>
+          )}
         </Card>
       </Grid>
     );
@@ -86,6 +91,7 @@ const mapDispatchToProps = (dispatch, { order, product, user }) => {
     remove: () => dispatch(_removeLineItem(lineItem, user.id))
   }
 }
+const mapState = ({ auth }) => ({ auth })
 
 
-export default withStyles(styles)(connect(null, mapDispatchToProps)(ProductSingle));
+export default withStyles(styles)(connect(mapState, mapDispatchToProps)(ProductSingle));
