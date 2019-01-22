@@ -4,11 +4,11 @@ const path = require('path')
 const db = require('./db')
 
 app.use(express.static(path.join(__dirname, '..', 'public')))
-
 app.use('/api', require('./api'))
 
 db.syncSeed()
   .then(() => console.log('SEED COMPLETE'))
+  .catch(err => { throw err });
 
 try {
   Object.assign(process.env, require('../.env.js'))

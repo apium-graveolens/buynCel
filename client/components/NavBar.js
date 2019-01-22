@@ -137,6 +137,8 @@ class PrimarySearchAppBar extends React.Component {
     //get number of different items currently in cart
     let numItems = typeof cart !== 'undefined' ? cart.lineItems.length : 0;
 
+    console.log('numItems', numItems > 0)
+
     const renderMenu = (
       <Menu
         anchorEl={anchorEl}
@@ -193,9 +195,13 @@ class PrimarySearchAppBar extends React.Component {
           <IconButton
             color="inherit"
           >
-            <Badge badgeContent={numItems} color="secondary">
-              <ShoppingCartIcon />
-            </Badge>
+            {numItems > 0 ? (
+              <Badge badgeContent={numItems} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            ) : (
+                <ShoppingCartIcon />
+              )}
           </IconButton>
           <p>Cart</p>
         </MenuItem>
@@ -262,9 +268,13 @@ class PrimarySearchAppBar extends React.Component {
                 component={Link}
                 to="/cart"
               >
-                <Badge badgeContent={numItems} color="secondary">
-                  <ShoppingCartIcon />
-                </Badge>
+                {numItems > 0 ? (
+                  <Badge badgeContent={numItems} color="secondary">
+                    <ShoppingCartIcon />
+                  </Badge>
+                ) : (
+                    <ShoppingCartIcon />
+                  )}
               </IconButton>
               {auth.user.id ? (
                 <IconButton
